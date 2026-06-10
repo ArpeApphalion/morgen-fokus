@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morgen-Fokus</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Morgen-Fokus">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:        #121212;
+            --surface:   #1e1e1e;
+            --surface2:  #2a2a2a;
+            --accent:    #bb86fc;
+            --accent-dk: #9965f4;
+            --text:      #ffffff;
+            --text-muted:#a0a0a0;
+            --today:     #2a1f3d;
+            --sidebar-w: 320px;
+            --anim:      260ms cubic-bezier(.4,0,.2,1);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        /* ── Hamburger-Button ── */
+        #menu-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--surface);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            z-index: 200;
+            transition: background var(--anim);
+        }
+        #menu-btn:hover { background: var(--surface2); }
+        #menu-btn span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: transform var(--anim), opacity var(--anim);
+        }
+        body.menu-open #menu-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        body.menu-open #menu-btn span:nth-child(2) { opacity: 0; }
+        body.menu-open #menu-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* ── Overlay ── */
+        #overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.55);
+            z-index: 100;
+        }
+        body.menu-open #overlay { display: block; }
+
+        /* ── Sidebar ── */
+        #sidebar {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: var(--sidebar-w);
+            max-width: 90vw;
+            background: var(--surface);
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform var(--anim);
+            overflow: hidden;
+        }
+        body.menu-open #sidebar { transform: translateX(0); }
+
+        #sidebar-header {
+            padding: 20px 16px 14px 68px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        #sidebar-header h2 {
+            font-size: 1rem;
+            color: var(--accent);
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+        #entry-count {
+            font-size: .78rem;
+            color: var(--text-muted);
+        }
+
+        #entries-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        #entries-list::-webkit-scrollbar { width: 4px; }
+        #entries-list::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+        .entry-item {
+            padding: 14px 16px;
+            border-bottom: 1px solid #2a2a2a;
+            cursor: default;
+            transition: background var(--anim);
+        }
+        .entry-item:hover { background: var(--surface2); }
+
+        .entry-item.today {
+            background: var(--today);
+            border-left: 3px solid var(--accent);
+        }
+        .entry-item.today:hover { background: #321f4a; }
+
+        .entry-date {
+            font-size: .72rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tag-heute {
+            background: var(--accent);
+            color: #121212;
+            font-size: .62rem;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 99px;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+        }
+        .entry-answer {
+            font-size: .92rem;
+            color: var(--text);
+            line-height: 1.4;
+        }
+        .entry-question {
+            font-size: .75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        #empty-state {
+            padding: 40px 16px;
+            color: var(--text-muted);
+            font-size: .9rem;
+            line-height: 1.6;
+        }
+
+        #sidebar-footer {
+            padding: 14px 16px;
+            border-top: 1px solid #333;
+            flex-shrink: 0;
+        }
+        #export-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 11px;
+            border-radius: 8px;
+            font-size: .88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--anim), color var(--anim);
+        }
+        #export-btn:hover { background: var(--accent); color: #121212; }
+
+        /* ── Haupt-Inhalt ── */
+        #main {
+            width: 100%;
+            max-width: 540px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        #fokus-begruessung {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        #fokus-frage {
+            font-size: 1.25rem;
+            line-height: 1.65;
+            color: #e0e0e0;
+            margin-bottom: 28px;
+        }
+
+        #jannik-antwort {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            margin-bottom: 16px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,.4);
+            outline: none;
+            transition: border-color var(--anim);
+        }
+        #jannik-antwort:focus { border-color: var(--accent); }
+
+        #speichern-btn {
+            background: var(--accent);
+            color: #121212;
+            border: none;
+            padding: 15px 36px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background var(--anim), transform 80ms;
+        }
+        #speichern-btn:hover  { background: var(--accent-dk); }
+        #speichern-btn:active { transform: scale(.97); }
+
+        /* Bestätigungs-Toast */
+        #toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--accent);
+            color: #121212;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: .9rem;
+            z-index: 300;
+            transition: transform var(--anim), opacity var(--anim);
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* ── Installieren-Banner ── */
+        #install-banner {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0; right: 0;
+            background: var(--surface);
+            border-top: 1px solid #333;
+            padding: 14px 20px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 250;
+        }
+        #install-banner.visible { display: flex; }
+        #install-banner p {
+            font-size: .88rem;
+            color: var(--text-muted);
+            flex: 1;
+        }
+        #install-banner p strong { color: var(--text); }
+        #install-yes {
+            background: var(--accent);
+            color: #121212;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: .85rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        #install-no {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: .85rem;
+            cursor: pointer;
+            padding: 9px 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="menu-btn" aria-label="Menü öffnen">
+        <span></span><span></span><span></span>
+    </button>
+
+    <div id="overlay"></div>
+
+    <aside id="sidebar" aria-label="Meine Ziele">
+        <div id="sidebar-header">
+            <h2>Meine Ziele</h2>
+            <span id="entry-count"></span>
+        </div>
+
+        <div id="entries-list">
+            <div id="empty-state">
+                Noch keine Einträge.<br>
+                Schreib dein erstes Ziel!
+            </div>
+        </div>
+
+        <div id="sidebar-footer">
+            <button id="export-btn">&#8595; Als .md exportieren</button>
+        </div>
+    </aside>
+
+    <main id="main">
+        <div id="fokus-begruessung"></div>
+        <div id="fokus-frage">Lade Fokus-Frage&#8230;</div>
+        <input type="text" id="jannik-antwort"
+               placeholder="Das will ich heute erreichen&#8230;"
+               autocomplete="off">
+        <button id="speichern-btn">Absenden</button>
+    </main>
+
+    <div id="toast"></div>
+
+    <div id="install-banner" role="banner">
+        <p><strong>App installieren?</strong> Dann ist Morgen-Fokus immer griffbereit.</p>
+        <button id="install-no">Nein danke</button>
+        <button id="install-yes">Installieren</button>
+    </div>
+
+<script>
+/* ════════════════════════════════════════
+   DATEN
+════════════════════════════════════════ */
+const begruessungsListe = [
+    "Guten Morgen, Jannik!",
+    "Hab einen schönen Start in den Tag, Jannik.",
+    "Lass uns anfangen, Jannik!",
+    "Einen wundervollen Start für dich, Jannik!",
+    "Na, Jannik? Bereit für den Tag?",
+    "Guten Morgen, Jannik. Die Sonne lacht (oder auch nicht)!",
+    "Hey Jannik, lass uns heute rocken!",
+    "Auf einen großartigen Tag, Jannik.",
+    "Moin Jannik, frisch und munter?",
+    "Hallo Jannik, Zeit für den Fokus.",
+    "Einen wundervollen Morgen wünsch ich dir, Jannik.",
+    "Jannik, heute ist dein Tag!",
+    "Willkommen im neuen Tag, Jannik.",
+    "Guten Morgen, Jannik. Volle Kraft voraus!",
+    "Hey Jannik, gut geschlafen? Los geht's.",
+    "Ein neuer Tag, eine neue Chance, Jannik.",
+    "Morgen, Jannik. Machen wir das Beste draus.",
+    "Hallo Jannik, bereit für deine Pläne?",
+    "Schön, dass du wach bist, Jannik.",
+    "Guten Morgen, Jannik. Legen wir los."
+];
+
+const fragenListe = [
+    "Was hast du dir heute als wichtigstes Ziel vorgenommen?",
+    "Was ist heute dein wichtigstes Ziel?",
+    "Was möchtest du heute erreichen?",
+    "Worauf strebst du heute hin?",
+    "Was ist das Wichtigste, das du heute erreichen willst?",
+    "Welche eine Sache macht den heutigen Tag zum Erfolg?",
+    "Wofür möchtest du heute Abend dankbar sein?",
+    "Was steht ganz oben auf deiner Prioritätenliste?",
+    "Worauf liegt heute dein Hauptfokus?",
+    "Welches Ziel hat heute die absolute Priorität?",
+    "Was möchtest du heute unbedingt erledigt haben?",
+    "Wenn du heute nur eine Sache schaffen könntest, welche wäre es?",
+    "Welchen Meilenstein möchtest du heute setzen?",
+    "Was ist der wichtigste Schritt, den du heute gehst?",
+    "Welches Vorhaben steht heute im Mittelpunkt?",
+    "Wo möchtest du heute Energie hineinstecken?",
+    "Was ist dein 'Big Win' für den heutigen Tag?",
+    "Welches Ergebnis möchtest du heute sehen?",
+    "Worauf konzentrierst du dich heute am stärksten?",
+    "Was ist deine wichtigste Tat heute?",
+    "Wo möchtest du heute echten Fortschritt sehen?",
+    "Was ist die wichtigste Entscheidung, die du heute treffen musst?",
+    "Welche Hürde möchtest du heute überwinden?",
+    "Was ist heute dein zentrales Thema?",
+    "Welches Ziel treibt dich heute an?",
+    "Was ist die wichtigste Aufgabe auf deinem Zettel?",
+    "Woran möchtest du heute Abend zufrieden zurückdenken?",
+    "Welches Ergebnis zählt heute für dich am meisten?",
+    "Was möchtest du heute für dich persönlich erreichen?",
+    "Was ist deine absolute Kernaufgabe heute?",
+    "Wo möchtest du heute einen Unterschied machen?",
+    "Was ist heute der Fokus deiner Aufmerksamkeit?",
+    "Welchen einen Plan setzt du heute um?",
+    "Worauf richtest du heute deine Willenskraft?",
+    "Was ist das eine Ding, das heute zählt?",
+    "Wofür möchtest du heute den Grundstein legen?",
+    "Was ist dein Tages-Highlight, das du anstrebst?",
+    "Welches Ziel steht heute unverrückbar fest?",
+    "Wo möchtest du heute glänzen?",
+    "Was ist dein definierendes Ziel für diesen Tag?"
+];
+
+/* ════════════════════════════════════════
+   HILFSFUNKTIONEN
+════════════════════════════════════════ */
+function heute() {
+    return new Date().toISOString().slice(0, 10);
+}
+
+function formatAnzeige(isoDate) {
+    const d = new Date(isoDate + 'T00:00:00');
+    return d.toLocaleDateString('de-DE', {
+        weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+    });
+}
+
+function ladeEintraege() {
+    try {
+        return JSON.parse(localStorage.getItem('mf_eintraege') || '[]');
+    } catch { return []; }
+}
+
+function speichereEintraege(arr) {
+    localStorage.setItem('mf_eintraege', JSON.stringify(arr));
+}
+
+function zeigToast(text) {
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ════════════════════════════════════════
+   FOKUS-FRAGE
+════════════════════════════════════════ */
+let aktuelleFrageText = '';
+
+function generiereFokus() {
+    const b = begruessungsListe[Math.floor(Math.random() * begruessungsListe.length)];
+    const f = fragenListe[Math.floor(Math.random() * fragenListe.length)];
+    aktuelleFrageText = f;
+    document.getElementById('fokus-begruessung').textContent = b;
+    document.getElementById('fokus-frage').textContent = f;
+}
+
+/* ════════════════════════════════════════
+   SIDEBAR RENDERN
+════════════════════════════════════════ */
+function renderSidebar() {
+    const eintraege = ladeEintraege();
+    const liste     = document.getElementById('entries-list');
+    const counter   = document.getElementById('entry-count');
+    const tagHeute  = heute();
+
+    counter.textContent = eintraege.length
+        ? eintraege.length + (eintraege.length === 1 ? ' Eintrag' : ' Einträge')
+        : '';
+
+    if (eintraege.length === 0) {
+        liste.innerHTML = '<div id="empty-state">Noch keine Einträge.<br>Schreib dein erstes Ziel!</div>';
+        return;
+    }
+
+    const sortiert = [...eintraege].sort((a, b) => b.datum.localeCompare(a.datum));
+
+    liste.innerHTML = sortiert.map(e => {
+        const istHeute = e.datum === tagHeute;
+        return `
+        <div class="entry-item${istHeute ? ' today' : ''}">
+            <div class="entry-date">
+                ${formatAnzeige(e.datum)}
+                ${istHeute ? '<span class="tag-heute">Heute</span>' : ''}
+            </div>
+            <div class="entry-answer">${escHtml(e.antwort)}</div>
+            <div class="entry-question">${escHtml(e.frage)}</div>
+        </div>`;
+    }).join('');
+}
+
+function escHtml(str) {
+    return str
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
+}
+
+/* ════════════════════════════════════════
+   EINTRAG SPEICHERN
+════════════════════════════════════════ */
+function speichereEintrag() {
+    const input   = document.getElementById('jannik-antwort');
+    const antwort = input.value.trim();
+    if (!antwort) { input.focus(); return; }
+
+    const eintraege = ladeEintraege();
+    const tagKey    = heute();
+
+    const idx = eintraege.findIndex(e => e.datum === tagKey);
+    const neu = { datum: tagKey, frage: aktuelleFrageText, antwort };
+
+    if (idx >= 0) {
+        eintraege[idx] = neu;
+        zeigToast('Ziel für heute aktualisiert');
+    } else {
+        eintraege.push(neu);
+        zeigToast('Ziel gespeichert');
+    }
+
+    speichereEintraege(eintraege);
+    renderSidebar();
+    input.value = '';
+}
+
+/* ════════════════════════════════════════
+   MARKDOWN-EXPORT
+════════════════════════════════════════ */
+function exportMD() {
+    const eintraege = ladeEintraege();
+    if (eintraege.length === 0) {
+        zeigToast('Noch keine Einträge zum Exportieren');
+        return;
+    }
+
+    const sortiert = [...eintraege].sort((a, b) => a.datum.localeCompare(b.datum));
+
+    let md = '# Morgen-Fokus – Meine Tagesziele\n\n';
+    md += `*Exportiert am ${new Date().toLocaleDateString('de-DE', {
+        weekday:'long', day:'2-digit', month:'long', year:'numeric'
+    })}*\n\n`;
+    md += '---\n\n';
+
+    sortiert.forEach(e => {
+        md += `## ${formatAnzeige(e.datum)}\n\n`;
+        md += `**Frage:** ${e.frage}\n\n`;
+        md += `**Mein Ziel:** ${e.antwort}\n\n`;
+        md += '---\n\n';
+    });
+
+    md += `*${eintraege.length} ${eintraege.length === 1 ? 'Eintrag' : 'Einträge'} insgesamt*\n`;
+
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `morgen-fokus-${heute()}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    zeigToast('Export gestartet');
+}
+
+/* ════════════════════════════════════════
+   MENÜ TOGGLE
+════════════════════════════════════════ */
+function toggleMenu() {
+    document.body.classList.toggle('menu-open');
+}
+function schliesseMenu() {
+    document.body.classList.remove('menu-open');
+}
+
+/* ════════════════════════════════════════
+   PWA: INSTALL BANNER
+════════════════════════════════════════ */
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('install-banner').classList.add('visible');
+});
+
+document.getElementById('install-yes').addEventListener('click', async () => {
+    document.getElementById('install-banner').classList.remove('visible');
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+    }
+});
+
+document.getElementById('install-no').addEventListener('click', () => {
+    document.getElementById('install-banner').classList.remove('visible');
+    deferredPrompt = null;
+});
+
+window.addEventListener('appinstalled', () => {
+    zeigToast('App installiert!');
+    deferredPrompt = null;
+});
+
+/* ════════════════════════════════════════
+   EVENT LISTENER
+════════════════════════════════════════ */
+document.getElementById('menu-btn').addEventListener('click', () => {
+    renderSidebar();
+    toggleMenu();
+});
+document.getElementById('overlay').addEventListener('click', schliesseMenu);
+document.getElementById('speichern-btn').addEventListener('click', speichereEintrag);
+document.getElementById('export-btn').addEventListener('click', exportMD);
+
+document.getElementById('jannik-antwort').addEventListener('keydown', e => {
+    if (e.key === 'Enter') speichereEintrag();
+});
+
+/* ════════════════════════════════════════
+   START
+════════════════════════════════════════ */
+generiereFokus();
+renderSidebar();
+
+/* ════════════════════════════════════════
+   SERVICE WORKER
+════════════════════════════════════════ */
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+            .catch(err => console.log('SW Fehler:', err));
+    });
+}
+</script>
+</body>
+</html>
