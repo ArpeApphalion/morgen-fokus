@@ -31,24 +31,17 @@
             background: var(--bg);
             color: var(--text);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            height: 100vh;
-            height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            height: 100vh; height: 100dvh;
+            display: flex; flex-direction: column; overflow: hidden;
         }
 
-        /* ── Hamburger-Button ── */
+        /* ── Hamburger ── */
         #menu-btn {
-            position: fixed;
-            top: 16px; left: 16px;
-            width: 40px; height: 40px;
-            border-radius: 8px;
-            background: var(--surface);
-            border: none; cursor: pointer;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center; gap: 5px;
-            z-index: 200;
+            position: fixed; top: 16px; left: 16px;
+            width: 40px; height: 40px; border-radius: 8px;
+            background: var(--surface); border: none; cursor: pointer;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; gap: 5px; z-index: 200;
             transition: background var(--anim);
         }
         #menu-btn:hover { background: var(--surface2); }
@@ -62,10 +55,7 @@
         body.menu-open #menu-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         /* ── Overlay ── */
-        #overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,.55); z-index: 100;
-        }
+        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 100; }
         body.menu-open #overlay { display: block; }
 
         /* ── Sidebar ── */
@@ -74,85 +64,55 @@
             width: var(--sidebar-w); max-width: 90vw;
             background: var(--surface); z-index: 150;
             display: flex; flex-direction: column;
-            transform: translateX(-100%);
-            transition: transform var(--anim);
-            overflow: hidden;
+            transform: translateX(-100%); transition: transform var(--anim); overflow: hidden;
         }
         body.menu-open #sidebar { transform: translateX(0); }
 
-        #sidebar-name {
-            padding: 60px 16px 14px;
-            border-bottom: 1px solid #333;
-        }
+        #sidebar-name { padding: 60px 16px 14px; border-bottom: 1px solid #333; }
         #sidebar-name label {
-            display: block;
-            font-size: .72rem; color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: .07em;
-            margin-bottom: 6px;
+            display: block; font-size: .72rem; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px;
         }
         #name-input {
-            width: 100%;
-            background: var(--surface2); border: 1px solid #333;
-            border-radius: 8px; color: var(--text);
-            padding: 10px 12px; font-size: .95rem; outline: none;
-            transition: border-color var(--anim);
+            width: 100%; background: var(--surface2); border: 1px solid #333;
+            border-radius: 8px; color: var(--text); padding: 10px 12px;
+            font-size: .95rem; outline: none; transition: border-color var(--anim);
         }
         #name-input:focus { border-color: var(--accent); }
 
         #routine-btn {
             margin: 10px 16px 0;
-            background: var(--surface2); border: 1px solid #333;
-            color: var(--text); padding: 11px 14px;
-            border-radius: 8px; font-size: .9rem; cursor: pointer;
-            display: flex; align-items: center; gap: 8px;
-            transition: background var(--anim);
+            background: var(--surface2); border: 1px solid #333; color: var(--text);
+            padding: 11px 14px; border-radius: 8px; font-size: .9rem; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; transition: background var(--anim);
             width: calc(100% - 32px);
         }
         #routine-btn:hover { background: #333; }
-        #routine-btn svg { flex-shrink: 0; }
 
         #sidebar-header {
-            padding: 14px 16px 10px;
-            border-bottom: 1px solid #333;
-            display: flex; align-items: center;
-            justify-content: space-between; flex-shrink: 0;
-            margin-top: 8px;
+            padding: 14px 16px 10px; border-bottom: 1px solid #333;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-shrink: 0; margin-top: 8px;
         }
-        #sidebar-header h2 {
-            font-size: 1rem; color: var(--accent);
-            letter-spacing: .04em; text-transform: uppercase;
-        }
+        #sidebar-header h2 { font-size: 1rem; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
         #entry-count { font-size: .78rem; color: var(--text-muted); }
 
         #entries-list { flex: 1; overflow-y: auto; padding: 8px 0; }
         #entries-list::-webkit-scrollbar { width: 4px; }
         #entries-list::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
 
-        .entry-item {
-            padding: 14px 16px; border-bottom: 1px solid #2a2a2a;
-            cursor: default; transition: background var(--anim);
-        }
+        .entry-item { padding: 14px 16px; border-bottom: 1px solid #2a2a2a; transition: background var(--anim); }
         .entry-item:hover { background: var(--surface2); }
         .entry-item.today { background: var(--today); border-left: 3px solid var(--accent); }
         .entry-item.today:hover { background: #321f4a; }
-
-        .entry-date {
-            font-size: .72rem; color: var(--text-muted);
-            margin-bottom: 4px; display: flex; align-items: center; gap: 6px;
-        }
-        .tag-heute {
-            background: var(--accent); color: #121212;
-            font-size: .62rem; font-weight: 700;
-            padding: 1px 6px; border-radius: 99px;
-            letter-spacing: .05em; text-transform: uppercase;
-        }
+        .entry-date { font-size: .72rem; color: var(--text-muted); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+        .tag-heute { background: var(--accent); color: #121212; font-size: .62rem; font-weight: 700; padding: 1px 6px; border-radius: 99px; letter-spacing: .05em; text-transform: uppercase; }
         .entry-answer { font-size: .92rem; color: var(--text); line-height: 1.4; }
         .entry-question { font-size: .75rem; color: var(--text-muted); margin-top: 4px; font-style: italic; line-height: 1.3; }
         .entry-evening { margin-top: 8px; border-top: 1px solid #333; padding-top: 8px; }
         .entry-evening-item { margin-top: 6px; }
         .entry-evening-q { font-size: .72rem; color: var(--text-muted); font-style: italic; }
         .entry-evening-a { font-size: .88rem; color: var(--text); line-height: 1.4; }
-
         #empty-state { padding: 40px 16px; color: var(--text-muted); font-size: .9rem; line-height: 1.6; }
 
         #sidebar-footer { padding: 14px 16px; border-top: 1px solid #333; flex-shrink: 0; }
@@ -164,199 +124,150 @@
         }
         #export-btn:hover { background: var(--accent); color: #121212; }
 
-        /* ── Main / Chat ── */
-        #main {
+        /* ── Main ── */
+        #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* ── Morning view (classic, before first answer) ── */
+        #morning-view {
             flex: 1; display: flex; flex-direction: column;
-            overflow: hidden; padding-top: 56px;
+            align-items: center; justify-content: center;
+            padding: 72px 24px 24px; text-align: center;
+        }
+        #morning-view.hidden { display: none; }
+        #fokus-begruessung {
+            font-size: 1.5rem; font-weight: 700; color: var(--accent);
+            margin-bottom: 10px; line-height: 1.3;
+        }
+        #fokus-frage {
+            font-size: 1.25rem; line-height: 1.65; color: #e0e0e0;
+            margin-bottom: 28px; max-width: 520px;
         }
 
+        /* ── Chat view (after first answer) ── */
         #chat-container {
-            flex: 1; overflow-y: auto;
-            padding: 20px 16px 12px;
-            display: flex; flex-direction: column; gap: 10px;
+            flex: 1; overflow-y: auto; padding: 20px 16px 12px;
+            display: none; flex-direction: column; gap: 10px;
         }
+        #chat-container.visible { display: flex; }
         #chat-container::-webkit-scrollbar { width: 4px; }
         #chat-container::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 
         .chat-msg {
-            max-width: 82%; padding: 11px 15px;
-            border-radius: 18px; line-height: 1.5;
-            font-size: .97rem; word-break: break-word;
+            max-width: 82%; padding: 11px 15px; border-radius: 18px;
+            line-height: 1.5; font-size: .97rem; word-break: break-word;
         }
-        .chat-msg.bot {
-            align-self: flex-start; background: var(--surface);
-            color: var(--text); border-bottom-left-radius: 4px;
-        }
-        .chat-msg.user {
-            align-self: flex-end; background: var(--accent-dk);
-            color: #fff; border-bottom-right-radius: 4px;
-        }
-        .chat-msg.greeting {
-            align-self: center; background: transparent;
-            color: var(--accent); font-size: 1.15rem; font-weight: 700;
-            padding: 4px 0; text-align: center; max-width: 100%;
-        }
-        .chat-divider {
-            align-self: center; font-size: .78rem; color: var(--text-muted);
-            padding: 4px 14px; background: var(--surface2); border-radius: 99px;
-            margin: 6px 0;
-        }
+        .chat-msg.bot { align-self: flex-start; background: var(--surface); color: var(--text); border-bottom-left-radius: 4px; }
+        .chat-msg.user { align-self: flex-end; background: var(--accent-dk); color: #fff; border-bottom-right-radius: 4px; }
+        .chat-msg.greeting { align-self: center; background: transparent; color: var(--accent); font-size: 1.1rem; font-weight: 700; padding: 4px 0; text-align: center; max-width: 100%; }
+        .chat-divider { align-self: center; font-size: .78rem; color: var(--text-muted); padding: 4px 14px; background: var(--surface2); border-radius: 99px; margin: 6px 0; }
 
         /* ── Input area ── */
         #input-area {
-            padding: 10px 12px;
-            display: flex; gap: 8px; align-items: center;
-            background: var(--bg); border-top: 1px solid #222;
-            flex-shrink: 0;
+            padding: 10px 12px; display: none; gap: 8px; align-items: center;
+            background: var(--bg); border-top: 1px solid #222; flex-shrink: 0;
         }
+        #input-area.visible { display: flex; }
+
         #antwort-input {
             flex: 1; padding: 12px 16px; font-size: 1rem;
             border: 1px solid transparent; border-radius: 24px;
-            background: var(--surface); color: var(--text);
-            outline: none; transition: border-color var(--anim);
+            background: var(--surface); color: var(--text); outline: none;
+            transition: border-color var(--anim);
         }
         #antwort-input:focus { border-color: var(--accent); }
+
+        /* Morning mode: input looks like before */
+        #main.morning-mode #input-area { padding: 0 24px 32px; border-top: none; }
+        #main.morning-mode #antwort-input {
+            border-radius: 8px; padding: 15px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,.4);
+            max-width: 540px; margin: 0 auto;
+        }
+        #main.morning-mode #senden-btn {
+            width: auto; border-radius: 8px; padding: 15px 36px;
+            font-size: 1rem; font-weight: 700; flex-shrink: 0;
+        }
+        /* Morning: wrap input + btn centered */
+        #main.morning-mode #input-area { flex-direction: column; gap: 16px; align-items: center; }
+        #main.morning-mode #antwort-input { width: 100%; max-width: 540px; }
+
         #senden-btn {
-            background: var(--accent); color: #121212;
-            border: none; width: 46px; height: 46px; border-radius: 50%;
+            background: var(--accent); color: #121212; border: none;
+            width: 46px; height: 46px; border-radius: 50%;
             font-size: 1.3rem; cursor: pointer; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
-            transition: background var(--anim);
+            transition: background var(--anim), transform 80ms;
         }
         #senden-btn:hover { background: var(--accent-dk); }
+        #senden-btn:active { transform: scale(.97); }
 
         /* ── Toast ── */
         #toast {
             position: fixed; bottom: 28px; left: 50%;
             transform: translateX(-50%) translateY(80px);
-            background: var(--accent); color: #121212;
-            font-weight: 700; padding: 12px 24px; border-radius: 8px;
-            font-size: .9rem; z-index: 300;
-            transition: transform var(--anim), opacity var(--anim);
+            background: var(--accent); color: #121212; font-weight: 700;
+            padding: 12px 24px; border-radius: 8px; font-size: .9rem;
+            z-index: 300; transition: transform var(--anim), opacity var(--anim);
             opacity: 0; pointer-events: none; white-space: nowrap;
         }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* ── Settings Overlay ── */
+        /* ── Settings overlay ── */
         #settings-overlay {
-            position: fixed; inset: 0; background: var(--bg);
-            z-index: 300; display: flex; flex-direction: column;
-            transform: translateX(100%);
-            transition: transform var(--anim); overflow: hidden;
+            position: fixed; inset: 0; background: var(--bg); z-index: 300;
+            display: flex; flex-direction: column;
+            transform: translateX(100%); transition: transform var(--anim); overflow: hidden;
         }
         #settings-overlay.open { transform: translateX(0); }
 
         #settings-header {
             padding: 16px; border-bottom: 1px solid #333;
-            display: flex; align-items: center; gap: 12px;
-            flex-shrink: 0;
+            display: flex; align-items: center; gap: 12px; flex-shrink: 0;
         }
         #settings-back {
             background: var(--surface); border: none; color: var(--accent);
-            width: 36px; height: 36px; border-radius: 8px;
-            font-size: 1.2rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+            width: 36px; height: 36px; border-radius: 8px; font-size: 1.2rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
         #settings-header h2 { font-size: 1rem; color: var(--text); }
-
         #settings-content { flex: 1; overflow-y: auto; padding: 16px; }
 
         .s-section { margin-bottom: 24px; }
-        .s-section-title {
-            font-size: .75rem; color: var(--accent);
-            text-transform: uppercase; letter-spacing: .08em;
-            font-weight: 700; margin-bottom: 10px; padding-left: 4px;
-        }
+        .s-section-title { font-size: .75rem; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: 10px; padding-left: 4px; }
         .s-card { background: var(--surface); border-radius: 12px; overflow: hidden; }
-
-        .s-row {
-            display: flex; align-items: center;
-            justify-content: space-between; padding: 14px 16px;
-            border-bottom: 1px solid #2a2a2a; gap: 12px;
-        }
+        .s-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #2a2a2a; gap: 12px; }
         .s-row:last-child { border-bottom: none; }
         .s-row-label { font-size: .95rem; color: var(--text); flex: 1; }
         .s-row-sub { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
+        .s-time { background: var(--surface2); border: 1px solid #444; color: var(--text); padding: 7px 10px; border-radius: 8px; font-size: .9rem; width: 96px; text-align: center; outline: none; color-scheme: dark; }
 
-        .s-time {
-            background: var(--surface2); border: 1px solid #444;
-            color: var(--text); padding: 7px 10px;
-            border-radius: 8px; font-size: .9rem; width: 96px;
-            text-align: center; outline: none;
-            color-scheme: dark;
-        }
-
-        /* Toggle */
         .toggle { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
         .toggle input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider {
-            position: absolute; cursor: pointer; inset: 0;
-            background: #444; border-radius: 26px;
-            transition: background var(--anim);
-        }
-        .toggle-slider::before {
-            content: ''; position: absolute;
-            width: 18px; height: 18px; left: 4px; bottom: 4px;
-            background: white; border-radius: 50%;
-            transition: transform var(--anim);
-        }
+        .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: #444; border-radius: 26px; transition: background var(--anim); }
+        .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: transform var(--anim); }
         .toggle input:checked + .toggle-slider { background: var(--accent); }
         .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
 
-        /* Custom questions */
-        .cq-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 12px 16px; border-bottom: 1px solid #2a2a2a;
-        }
+        .cq-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #2a2a2a; }
         .cq-text { flex: 1; font-size: .9rem; color: var(--text); line-height: 1.4; }
-        .cq-del {
-            background: none; border: none; color: #ff6b6b;
-            cursor: pointer; font-size: 1.1rem; padding: 4px; flex-shrink: 0;
-        }
-        .cq-add {
-            padding: 12px 16px; display: flex; gap: 8px;
-            border-top: 1px solid #2a2a2a;
-        }
-        .cq-add input {
-            flex: 1; background: var(--surface2); border: 1px solid #444;
-            border-radius: 8px; color: var(--text);
-            padding: 9px 12px; font-size: .9rem; outline: none;
-        }
+        .cq-del { background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 1.1rem; padding: 4px; flex-shrink: 0; }
+        .cq-add { padding: 12px 16px; display: flex; gap: 8px; border-top: 1px solid #2a2a2a; }
+        .cq-add input { flex: 1; background: var(--surface2); border: 1px solid #444; border-radius: 8px; color: var(--text); padding: 9px 12px; font-size: .9rem; outline: none; }
         .cq-add input:focus { border-color: var(--accent); }
-        .cq-add button {
-            background: var(--accent); color: #121212;
-            border: none; border-radius: 8px;
-            padding: 9px 14px; font-weight: 700;
-            font-size: .85rem; cursor: pointer; white-space: nowrap;
-        }
+        .cq-add button { background: var(--accent); color: #121212; border: none; border-radius: 8px; padding: 9px 14px; font-weight: 700; font-size: .85rem; cursor: pointer; white-space: nowrap; }
 
-        /* ── Install Banner ── */
-        #install-banner {
-            display: none; position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--surface); border-top: 1px solid #333;
-            padding: 14px 20px; align-items: center;
-            justify-content: space-between; gap: 12px; z-index: 250;
-        }
+        /* ── Install banner ── */
+        #install-banner { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid #333; padding: 14px 20px; align-items: center; justify-content: space-between; gap: 12px; z-index: 250; }
         #install-banner.visible { display: flex; }
         #install-banner p { font-size: .88rem; color: var(--text-muted); flex: 1; }
         #install-banner p strong { color: var(--text); }
-        #install-yes {
-            background: var(--accent); color: #121212; border: none;
-            padding: 9px 18px; border-radius: 8px; font-weight: 700;
-            font-size: .85rem; cursor: pointer; white-space: nowrap;
-        }
-        #install-no {
-            background: transparent; border: none; color: var(--text-muted);
-            font-size: .85rem; cursor: pointer; padding: 9px 6px;
-        }
+        #install-yes { background: var(--accent); color: #121212; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: .85rem; cursor: pointer; white-space: nowrap; }
+        #install-no { background: transparent; border: none; color: var(--text-muted); font-size: .85rem; cursor: pointer; padding: 9px 6px; }
     </style>
 </head>
 <body>
 
-<button id="menu-btn" aria-label="Menü öffnen">
-    <span></span><span></span><span></span>
-</button>
-
+<button id="menu-btn" aria-label="Menü öffnen"><span></span><span></span><span></span></button>
 <div id="overlay"></div>
 
 <aside id="sidebar" aria-label="Navigation">
@@ -364,27 +275,23 @@
         <label for="name-input">Dein Name</label>
         <input type="text" id="name-input" placeholder="Name eingeben…" autocomplete="off">
     </div>
-
     <button id="routine-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         Routine bearbeiten
     </button>
-
     <div id="sidebar-header">
         <h2>Verlauf</h2>
         <span id="entry-count"></span>
     </div>
-
-    <div id="entries-list">
-        <div id="empty-state">Noch keine Einträge.<br>Schreib dein erstes Ziel!</div>
-    </div>
-
-    <div id="sidebar-footer">
-        <button id="export-btn">&#8595; Als .md exportieren</button>
-    </div>
+    <div id="entries-list"><div id="empty-state">Noch keine Einträge.<br>Schreib dein erstes Ziel!</div></div>
+    <div id="sidebar-footer"><button id="export-btn">&#8595; Als .md exportieren</button></div>
 </aside>
 
 <main id="main">
+    <div id="morning-view">
+        <div id="fokus-begruessung"></div>
+        <div id="fokus-frage"></div>
+    </div>
     <div id="chat-container"></div>
     <div id="input-area">
         <input type="text" id="antwort-input" placeholder="Das will ich heute erreichen…" autocomplete="off">
@@ -409,53 +316,37 @@
 </div>
 
 <script>
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    DATEN
-═══════════════════════════════════════════ */
+════════════════════════════════════════ */
 const begruessungsListe = [
-    "Guten Morgen, {name}!",
-    "Hab einen schönen Start in den Tag, {name}.",
-    "Lass uns anfangen, {name}!",
-    "Einen wundervollen Start für dich, {name}!",
-    "Na, {name}? Bereit für den Tag?",
-    "Guten Morgen, {name}. Die Sonne lacht (oder auch nicht)!",
-    "Hey {name}, lass uns heute rocken!",
-    "Auf einen großartigen Tag, {name}.",
-    "Moin {name}, frisch und munter?",
-    "Hallo {name}, Zeit für den Fokus.",
-    "Einen wundervollen Morgen wünsch ich dir, {name}.",
-    "{name}, heute ist dein Tag!",
-    "Willkommen im neuen Tag, {name}.",
-    "Guten Morgen, {name}. Volle Kraft voraus!",
-    "Hey {name}, gut geschlafen? Los geht's.",
-    "Ein neuer Tag, eine neue Chance, {name}.",
-    "Morgen, {name}. Machen wir das Beste draus.",
-    "Hallo {name}, bereit für deine Pläne?",
-    "Schön, dass du wach bist, {name}.",
-    "Guten Morgen, {name}. Legen wir los."
+    "Guten Morgen, {name}!", "Hab einen schönen Start in den Tag, {name}.",
+    "Lass uns anfangen, {name}!", "Einen wundervollen Start für dich, {name}!",
+    "Na, {name}? Bereit für den Tag?", "Guten Morgen, {name}. Die Sonne lacht (oder auch nicht)!",
+    "Hey {name}, lass uns heute rocken!", "Auf einen großartigen Tag, {name}.",
+    "Moin {name}, frisch und munter?", "Hallo {name}, Zeit für den Fokus.",
+    "Einen wundervollen Morgen wünsch ich dir, {name}.", "{name}, heute ist dein Tag!",
+    "Willkommen im neuen Tag, {name}.", "Guten Morgen, {name}. Volle Kraft voraus!",
+    "Hey {name}, gut geschlafen? Los geht's.", "Ein neuer Tag, eine neue Chance, {name}.",
+    "Morgen, {name}. Machen wir das Beste draus.", "Hallo {name}, bereit für deine Pläne?",
+    "Schön, dass du wach bist, {name}.", "Guten Morgen, {name}. Legen wir los."
 ];
 
 const abendBegruessungsListe = [
-    "Guten Abend, {name}!",
-    "Zeit für die Reflexion, {name}.",
-    "Wie war dein Tag, {name}?",
-    "Lass uns auf den Tag zurückblicken, {name}.",
-    "Der Tag neigt sich dem Ende, {name}.",
-    "Abend, {name}. Bereit für die Reflexion?",
-    "Fast geschafft, {name}. Wie war's?",
+    "Guten Abend, {name}!", "Zeit für die Reflexion, {name}.",
+    "Wie war dein Tag, {name}?", "Lass uns auf den Tag zurückblicken, {name}.",
+    "Der Tag neigt sich dem Ende, {name}.", "Abend, {name}. Bereit für die Reflexion?",
+    "Fast geschafft, {name}. Wie war's?"
 ];
 
 const fragenListe = [
     "Was hast du dir heute als wichtigstes Ziel vorgenommen?",
-    "Was ist heute dein wichtigstes Ziel?",
-    "Was möchtest du heute erreichen?",
-    "Worauf strebst du heute hin?",
-    "Was ist das Wichtigste, das du heute erreichen willst?",
+    "Was ist heute dein wichtigstes Ziel?", "Was möchtest du heute erreichen?",
+    "Worauf strebst du heute hin?", "Was ist das Wichtigste, das du heute erreichen willst?",
     "Welche eine Sache macht den heutigen Tag zum Erfolg?",
     "Wofür möchtest du heute Abend dankbar sein?",
     "Was steht ganz oben auf deiner Prioritätenliste?",
-    "Worauf liegt heute dein Hauptfokus?",
-    "Welches Ziel hat heute die absolute Priorität?",
+    "Worauf liegt heute dein Hauptfokus?", "Welches Ziel hat heute die absolute Priorität?",
     "Was möchtest du heute unbedingt erledigt haben?",
     "Wenn du heute nur eine Sache schaffen könntest, welche wäre es?",
     "Welchen Meilenstein möchtest du heute setzen?",
@@ -469,8 +360,7 @@ const fragenListe = [
     "Wo möchtest du heute echten Fortschritt sehen?",
     "Was ist die wichtigste Entscheidung, die du heute treffen musst?",
     "Welche Hürde möchtest du heute überwinden?",
-    "Was ist heute dein zentrales Thema?",
-    "Welches Ziel treibt dich heute an?",
+    "Was ist heute dein zentrales Thema?", "Welches Ziel treibt dich heute an?",
     "Was ist die wichtigste Aufgabe auf deinem Zettel?",
     "Woran möchtest du heute Abend zufrieden zurückdenken?",
     "Welches Ergebnis zählt heute für dich am meisten?",
@@ -478,14 +368,12 @@ const fragenListe = [
     "Was ist deine absolute Kernaufgabe heute?",
     "Wo möchtest du heute einen Unterschied machen?",
     "Was ist heute der Fokus deiner Aufmerksamkeit?",
-    "Welchen einen Plan setzt du heute um?",
-    "Worauf richtest du heute deine Willenskraft?",
+    "Welchen einen Plan setzt du heute um?", "Worauf richtest du heute deine Willenskraft?",
     "Was ist das eine Ding, das heute zählt?",
     "Wofür möchtest du heute den Grundstein legen?",
     "Was ist dein Tages-Highlight, das du anstrebst?",
     "Welches Ziel steht heute unverrückbar fest?",
-    "Wo möchtest du heute glänzen?",
-    "Was ist dein definierendes Ziel für diesen Tag?"
+    "Wo möchtest du heute glänzen?", "Was ist dein definierendes Ziel für diesen Tag?"
 ];
 
 const ABEND_FRAGEN = [
@@ -496,60 +384,57 @@ const ABEND_FRAGEN = [
 
 const DEFAULT_SETTINGS = {
     morningRoutine: {
-        enabled: true,
-        time: "06:00",
-        notificationEnabled: true,
-        mainQuestionEnabled: true,
-        customQuestions: []
+        enabled: true, time: "06:00", notificationEnabled: true,
+        mainQuestionEnabled: true, customQuestions: []
     },
     eveningReflection: {
-        enabled: true,
-        time: "21:00",
-        notificationEnabled: true,
-        questions: [
-            { id: 0, enabled: true },
-            { id: 1, enabled: true },
-            { id: 2, enabled: true }
-        ]
+        enabled: true, time: "21:00", notificationEnabled: true,
+        questions: [{ id: 0, enabled: true }, { id: 1, enabled: true }, { id: 2, enabled: true }],
+        customQuestions: []
     }
 };
 
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    STORAGE
-═══════════════════════════════════════════ */
-const ladeName   = ()  => localStorage.getItem('mf_name') || '';
+════════════════════════════════════════ */
+const ladeName    = ()  => localStorage.getItem('mf_name') || '';
 const speichereName = n => localStorage.setItem('mf_name', n);
 
 function ladeSettings() {
     try {
         const s = JSON.parse(localStorage.getItem('mf_settings') || '{}');
-        const mr = Object.assign({}, DEFAULT_SETTINGS.morningRoutine, s.morningRoutine || {});
-        mr.customQuestions = (s.morningRoutine?.customQuestions) || [];
-        const er = Object.assign({}, DEFAULT_SETTINGS.eveningReflection, s.eveningReflection || {});
-        er.questions = (s.eveningReflection?.questions) || DEFAULT_SETTINGS.eveningReflection.questions;
+        const mr = { ...DEFAULT_SETTINGS.morningRoutine, ...(s.morningRoutine || {}) };
+        mr.customQuestions = s.morningRoutine?.customQuestions || [];
+        const er = { ...DEFAULT_SETTINGS.eveningReflection, ...(s.eveningReflection || {}) };
+        er.questions = s.eveningReflection?.questions || DEFAULT_SETTINGS.eveningReflection.questions;
+        er.customQuestions = s.eveningReflection?.customQuestions || [];
         return { morningRoutine: mr, eveningReflection: er };
     } catch { return JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); }
 }
 const speichereSettings = s => localStorage.setItem('mf_settings', JSON.stringify(s));
 
 function ladeEintraege() {
-    try { return JSON.parse(localStorage.getItem('mf_eintraege') || '[]'); }
-    catch { return []; }
+    try { return JSON.parse(localStorage.getItem('mf_eintraege') || '[]'); } catch { return []; }
 }
-const speichereEintraege = arr => localStorage.setItem('mf_eintraege', JSON.stringify(arr));
+const speichereEintraege = a => localStorage.setItem('mf_eintraege', JSON.stringify(a));
 
 function ladeHeute() {
-    try { return JSON.parse(localStorage.getItem('mf_heute') || 'null'); }
-    catch { return null; }
+    try { return JSON.parse(localStorage.getItem('mf_heute') || 'null'); } catch { return null; }
 }
 const speichereHeute = h => localStorage.setItem('mf_heute', JSON.stringify(h));
 
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    HILFSFUNKTIONEN
-═══════════════════════════════════════════ */
-const pickRand   = arr => arr[Math.floor(Math.random() * arr.length)];
-const escHtml    = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const heute      = () => new Date().toISOString().slice(0, 10);
+════════════════════════════════════════ */
+const pickRand = arr => arr[Math.floor(Math.random() * arr.length)];
+const escHtml  = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const heute    = () => new Date().toISOString().slice(0, 10);
+
+function resolveGreet(template, name) {
+    if (!template) return '';
+    if (!name) return template.replace(/,?\s*\{name\}/g, '').replace(/\{name\},?\s*/g, '').trim();
+    return template.replace('{name}', name);
+}
 
 function formatDatum(iso) {
     return new Date(iso + 'T00:00:00').toLocaleDateString('de-DE', {
@@ -559,25 +444,19 @@ function formatDatum(iso) {
 
 function zeigToast(txt) {
     const t = document.getElementById('toast');
-    t.textContent = txt;
-    t.classList.add('show');
+    t.textContent = txt; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    TAG-LOGIK
-═══════════════════════════════════════════ */
+════════════════════════════════════════ */
 function getAppDay() {
     const s = ladeSettings();
     const [h, m] = s.morningRoutine.time.split(':').map(Number);
     const now = new Date();
-    const morning = new Date(now);
-    morning.setHours(h, m, 0, 0);
-    if (now < morning) {
-        const ges = new Date(now);
-        ges.setDate(ges.getDate() - 1);
-        return ges.toISOString().slice(0, 10);
-    }
+    const morning = new Date(now); morning.setHours(h, m, 0, 0);
+    if (now < morning) { const g = new Date(now); g.setDate(g.getDate() - 1); return g.toISOString().slice(0, 10); }
     return heute();
 }
 
@@ -585,9 +464,7 @@ function isAbendZeit() {
     const s = ladeSettings();
     if (!s.eveningReflection.enabled) return false;
     const [h, m] = s.eveningReflection.time.split(':').map(Number);
-    const now = new Date();
-    const abend = new Date(now);
-    abend.setHours(h, m, 0, 0);
+    const now = new Date(); const abend = new Date(now); abend.setHours(h, m, 0, 0);
     return now >= abend;
 }
 
@@ -601,6 +478,13 @@ function archivieren(h) {
         const a = h.chat.find(m => m.key === `abend_${i}_ans`);
         if (q && a) abendAntworten.push({ frage: q.text, antwort: a.text });
     }
+    h.chat.forEach(msg => {
+        if (msg.key?.startsWith('abend_custom_q_')) {
+            const id = msg.key.replace('abend_custom_q_', '');
+            const a = h.chat.find(m => m.key === 'abend_custom_ans_' + id);
+            if (a) abendAntworten.push({ frage: msg.text, antwort: a.text });
+        }
+    });
     const customAntworten = [];
     h.chat.forEach(msg => {
         if (msg.key?.startsWith('custom_q_')) {
@@ -609,13 +493,7 @@ function archivieren(h) {
             if (a) customAntworten.push({ frage: msg.text, antwort: a.text });
         }
     });
-    const eintrag = {
-        datum: h.datum,
-        frage: morgenQ?.text || '',
-        antwort: morgenAns.text,
-        customAntworten,
-        abendAntworten
-    };
+    const eintrag = { datum: h.datum, frage: morgenQ?.text || '', antwort: morgenAns.text, customAntworten, abendAntworten };
     const eintraege = ladeEintraege();
     const idx = eintraege.findIndex(e => e.datum === h.datum);
     if (idx >= 0) eintraege[idx] = eintrag; else eintraege.push(eintrag);
@@ -624,13 +502,11 @@ function archivieren(h) {
 
 function initHeute(datum) {
     const s = ladeSettings();
-    const name = ladeName() || 'du';
+    const name = ladeName();
     const chat = [];
     let activeQuestion = null;
-
-    const greet = pickRand(begruessungsListe).replace('{name}', name);
-    chat.push({ role: 'bot', text: greet, key: 'greet', isGreeting: true });
-
+    const greetTemplate = pickRand(begruessungsListe);
+    chat.push({ role: 'bot', text: resolveGreet(greetTemplate, name), key: 'greet', isGreeting: true, template: greetTemplate });
     if (s.morningRoutine.enabled) {
         const enabledCustom = s.morningRoutine.customQuestions.filter(q => q.enabled);
         if (s.morningRoutine.mainQuestionEnabled) {
@@ -644,7 +520,6 @@ function initHeute(datum) {
             activeQuestion = 'morgen_free';
         }
     }
-
     return { datum, chat, activeQuestion };
 }
 
@@ -662,78 +537,80 @@ function checkRollover() {
 function naechsteFrage(h, s) {
     const aq = h.activeQuestion;
     const enabledCustom = s.morningRoutine.customQuestions.filter(q => q.enabled);
+    const enabledAbend   = s.eveningReflection.questions.filter(q => q.enabled);
+    const enabledAbendCustom = (s.eveningReflection.customQuestions || []).filter(q => q.enabled);
 
     if (aq === 'morgen_main' || aq === 'morgen_free') {
         if (enabledCustom.length > 0) return 'custom_' + enabledCustom[0].id;
         return null;
     }
-    if (aq?.startsWith('custom_')) {
+    if (aq?.startsWith('custom_') && !aq.startsWith('custom_ans')) {
         const id = aq.replace('custom_', '');
         const idx = enabledCustom.findIndex(q => String(q.id) === id);
-        if (idx >= 0 && idx + 1 < enabledCustom.length)
-            return 'custom_' + enabledCustom[idx + 1].id;
+        if (idx >= 0 && idx + 1 < enabledCustom.length) return 'custom_' + enabledCustom[idx + 1].id;
         return null;
     }
-    if (aq?.startsWith('abend_')) {
+    if (aq?.startsWith('abend_') && !aq.startsWith('abend_custom_')) {
         const idx = parseInt(aq.replace('abend_', ''));
-        const enabledAbend = s.eveningReflection.questions.filter(q => q.enabled);
         if (idx + 1 < enabledAbend.length) return 'abend_' + (idx + 1);
+        if (enabledAbendCustom.length > 0) return 'abend_custom_' + enabledAbendCustom[0].id;
+        return null;
+    }
+    if (aq?.startsWith('abend_custom_')) {
+        const id = aq.replace('abend_custom_', '');
+        const idx = enabledAbendCustom.findIndex(q => String(q.id) === id);
+        if (idx >= 0 && idx + 1 < enabledAbendCustom.length) return 'abend_custom_' + enabledAbendCustom[idx + 1].id;
         return null;
     }
     return null;
 }
 
 function checkAbendTransition(h, s, name) {
-    if (!isAbendZeit()) return false;
-    if (!s.eveningReflection.enabled) return false;
+    if (!isAbendZeit() || !s.eveningReflection.enabled) return false;
     if (h.chat.some(m => m.key === 'abend_intro')) return false;
-
-    const morgenDone = h.chat.some(m =>
-        m.key === 'morgen_main_ans' || m.key === 'morgen_free_ans' ||
-        (m.key?.startsWith('custom_ans_'))
-    );
-    // Also start evening if no morning questions were configured
-    const noMorning = !s.morningRoutine.enabled;
-    if (!morgenDone && !noMorning) return false;
-
-    const abendGreet = pickRand(abendBegruessungsListe).replace('{name}', name);
+    const morgenDone = h.chat.some(m => m.role === 'user');
+    if (!morgenDone && s.morningRoutine.enabled) return false;
+    const abendGreetTemplate = pickRand(abendBegruessungsListe);
     h.chat.push({ role: 'divider', text: '— Abendreflexion —', key: 'abend_divider' });
-    h.chat.push({ role: 'bot', text: abendGreet, key: 'abend_intro', isGreeting: true });
-
+    h.chat.push({ role: 'bot', text: resolveGreet(abendGreetTemplate, name), key: 'abend_intro', isGreeting: true, template: abendGreetTemplate });
     const enabledAbend = s.eveningReflection.questions.filter(q => q.enabled);
+    const enabledAbendCustom = (s.eveningReflection.customQuestions || []).filter(q => q.enabled);
     if (enabledAbend.length > 0) {
         h.chat.push({ role: 'bot', text: ABEND_FRAGEN[enabledAbend[0].id], key: 'abend_0_q' });
         h.activeQuestion = 'abend_0';
+    } else if (enabledAbendCustom.length > 0) {
+        h.chat.push({ role: 'bot', text: enabledAbendCustom[0].text, key: 'abend_custom_q_' + enabledAbendCustom[0].id });
+        h.activeQuestion = 'abend_custom_' + enabledAbendCustom[0].id;
     }
     return true;
 }
 
-/* ═══════════════════════════════════════════
-   ANTWORT VERARBEITEN
-═══════════════════════════════════════════ */
+/* ════════════════════════════════════════
+   ANTWORT
+════════════════════════════════════════ */
 function verarbeiteAntwort() {
     const input = document.getElementById('antwort-input');
     const text = input.value.trim();
     if (!text) { input.focus(); return; }
-
     let h = ladeHeute() || checkRollover();
     const s = ladeSettings();
-    const name = ladeName() || 'du';
+    const name = ladeName();
     const aq = h.activeQuestion;
     if (!aq) return;
 
-    // Store answer
-    if (aq === 'morgen_main')     h.chat.push({ role: 'user', text, key: 'morgen_main_ans' });
-    else if (aq === 'morgen_free') h.chat.push({ role: 'user', text, key: 'morgen_free_ans' });
+    if (aq === 'morgen_main')       h.chat.push({ role: 'user', text, key: 'morgen_main_ans' });
+    else if (aq === 'morgen_free')  h.chat.push({ role: 'user', text, key: 'morgen_free_ans' });
     else if (aq.startsWith('custom_')) {
         const id = aq.replace('custom_', '');
         h.chat.push({ role: 'user', text, key: 'custom_ans_' + id });
+    } else if (aq.startsWith('abend_custom_')) {
+        const id = aq.replace('abend_custom_', '');
+        h.chat.push({ role: 'user', text, key: 'abend_custom_ans_' + id });
     } else if (aq.startsWith('abend_')) {
         const idx = aq.replace('abend_', '');
         h.chat.push({ role: 'user', text, key: `abend_${idx}_ans` });
     }
 
-    // Next question
     const next = naechsteFrage(h, s);
     h.activeQuestion = next;
 
@@ -742,6 +619,10 @@ function verarbeiteAntwort() {
             const id = next.replace('custom_', '');
             const q = s.morningRoutine.customQuestions.find(q => String(q.id) === id);
             if (q) h.chat.push({ role: 'bot', text: q.text, key: 'custom_q_' + id });
+        } else if (next.startsWith('abend_custom_')) {
+            const id = next.replace('abend_custom_', '');
+            const q = (s.eveningReflection.customQuestions || []).find(q => String(q.id) === id);
+            if (q) h.chat.push({ role: 'bot', text: q.text, key: 'abend_custom_q_' + id });
         } else if (next.startsWith('abend_')) {
             const idx = parseInt(next.replace('abend_', ''));
             const enabledAbend = s.eveningReflection.questions.filter(q => q.enabled);
@@ -756,255 +637,223 @@ function verarbeiteAntwort() {
     renderMainScreen();
 }
 
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    RENDER MAIN
-═══════════════════════════════════════════ */
+════════════════════════════════════════ */
 function renderMainScreen() {
     let h = checkRollover();
     const s = ladeSettings();
-    const name = ladeName() || 'du';
+    const name = ladeName();
 
     if (!h.activeQuestion) {
         if (checkAbendTransition(h, s, name)) speichereHeute(h);
     }
 
-    const container = document.getElementById('chat-container');
-    container.innerHTML = h.chat.map(msg => {
-        if (msg.role === 'divider')
-            return `<div class="chat-divider">${escHtml(msg.text)}</div>`;
-        const cls = msg.isGreeting ? 'chat-msg greeting' : `chat-msg ${msg.role}`;
-        return `<div class="${cls}">${escHtml(msg.text)}</div>`;
-    }).join('');
-    container.scrollTop = container.scrollHeight;
-
+    const hasAnswered = h.chat.some(m => m.role === 'user');
+    const main = document.getElementById('main');
+    const morningView = document.getElementById('morning-view');
+    const chatContainer = document.getElementById('chat-container');
     const inputArea = document.getElementById('input-area');
     const input = document.getElementById('antwort-input');
+    const btn = document.getElementById('senden-btn');
 
-    if (h.activeQuestion) {
-        inputArea.style.display = 'flex';
-        if (h.activeQuestion === 'morgen_free')
+    if (!hasAnswered) {
+        // Classic morning view
+        morningView.classList.remove('hidden');
+        chatContainer.classList.remove('visible');
+        main.classList.add('morning-mode');
+
+        const greetMsg = h.chat.find(m => m.key === 'greet');
+        const questionMsg = h.chat.find(m => m.key === 'morgen_main_q') ||
+                            h.chat.find(m => m.role === 'bot' && m.key !== 'greet');
+
+        document.getElementById('fokus-begruessung').textContent =
+            greetMsg ? resolveGreet(greetMsg.template || greetMsg.text, name) : '';
+        document.getElementById('fokus-frage').textContent =
+            questionMsg ? questionMsg.text : '';
+
+        if (h.activeQuestion) {
+            inputArea.classList.add('visible');
             input.placeholder = 'Das will ich heute erreichen…';
-        else if (h.activeQuestion.startsWith('abend_'))
-            input.placeholder = 'Deine Antwort…';
-        else
-            input.placeholder = 'Deine Antwort…';
+            btn.textContent = 'Absenden';
+            btn.style.cssText = '';
+        } else {
+            inputArea.classList.remove('visible');
+        }
     } else {
-        inputArea.style.display = 'none';
+        // Chat view
+        morningView.classList.add('hidden');
+        chatContainer.classList.add('visible');
+        main.classList.remove('morning-mode');
+        btn.innerHTML = '&#10148;';
+        btn.style.cssText = '';
+
+        chatContainer.innerHTML = h.chat.map(msg => {
+            if (msg.role === 'divider')
+                return `<div class="chat-divider">${escHtml(msg.text)}</div>`;
+            const displayText = msg.template ? resolveGreet(msg.template, name) : msg.text;
+            const cls = msg.isGreeting ? 'chat-msg greeting' : `chat-msg ${msg.role}`;
+            return `<div class="${cls}">${escHtml(displayText)}</div>`;
+        }).join('');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        if (h.activeQuestion) {
+            inputArea.classList.add('visible');
+            input.placeholder = 'Deine Antwort…';
+        } else {
+            inputArea.classList.remove('visible');
+        }
     }
 }
 
-/* ═══════════════════════════════════════════
-   SIDEBAR RENDER
-═══════════════════════════════════════════ */
+/* ════════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════════ */
 function renderSidebar() {
     const eintraege = ladeEintraege();
-    const liste     = document.getElementById('entries-list');
-    const counter   = document.getElementById('entry-count');
-    const tagHeute  = getAppDay();
-
-    counter.textContent = eintraege.length
-        ? eintraege.length + (eintraege.length === 1 ? ' Eintrag' : ' Einträge') : '';
-
-    if (eintraege.length === 0) {
-        liste.innerHTML = '<div id="empty-state">Noch keine Einträge.<br>Schreib dein erstes Ziel!</div>';
-        return;
-    }
-
+    const liste = document.getElementById('entries-list');
+    const counter = document.getElementById('entry-count');
+    const tagHeute = getAppDay();
+    counter.textContent = eintraege.length ? eintraege.length + (eintraege.length === 1 ? ' Eintrag' : ' Einträge') : '';
+    if (!eintraege.length) { liste.innerHTML = '<div id="empty-state">Noch keine Einträge.<br>Schreib dein erstes Ziel!</div>'; return; }
     const sortiert = [...eintraege].sort((a, b) => b.datum.localeCompare(a.datum));
     liste.innerHTML = sortiert.map(e => {
         const isH = e.datum === tagHeute;
-        const abendHtml = (e.abendAntworten?.length)
+        const abendHtml = e.abendAntworten?.length
             ? `<div class="entry-evening">${e.abendAntworten.map(a =>
-                `<div class="entry-evening-item">
-                    <div class="entry-evening-q">${escHtml(a.frage)}</div>
-                    <div class="entry-evening-a">${escHtml(a.antwort)}</div>
-                </div>`).join('')}</div>`
-            : '';
-        return `<div class="entry-item${isH ? ' today' : ''}">
-            <div class="entry-date">
-                ${escHtml(formatDatum(e.datum))}
-                ${isH ? '<span class="tag-heute">Heute</span>' : ''}
-            </div>
+                `<div class="entry-evening-item"><div class="entry-evening-q">${escHtml(a.frage)}</div><div class="entry-evening-a">${escHtml(a.antwort)}</div></div>`
+              ).join('')}</div>` : '';
+        return `<div class="entry-item${isH?' today':''}">
+            <div class="entry-date">${escHtml(formatDatum(e.datum))}${isH?'<span class="tag-heute">Heute</span>':''}</div>
             <div class="entry-answer">${escHtml(e.antwort)}</div>
-            ${e.frage ? `<div class="entry-question">${escHtml(e.frage)}</div>` : ''}
+            ${e.frage?`<div class="entry-question">${escHtml(e.frage)}</div>`:''}
             ${abendHtml}
         </div>`;
     }).join('');
 }
 
-/* ═══════════════════════════════════════════
-   SETTINGS RENDER
-═══════════════════════════════════════════ */
+/* ════════════════════════════════════════
+   SETTINGS
+════════════════════════════════════════ */
 function renderSettings() {
     const s = ladeSettings();
     const content = document.getElementById('settings-content');
 
-    const customQHtml = s.morningRoutine.customQuestions.map(q => `
-        <div class="cq-item">
-            <label class="toggle">
-                <input type="checkbox" data-cq-toggle="${q.id}" ${q.enabled ? 'checked' : ''}>
-                <span class="toggle-slider"></span>
-            </label>
-            <span class="cq-text">${escHtml(q.text)}</span>
-            <button class="cq-del" data-cq-del="${q.id}" title="Löschen">&#10005;</button>
-        </div>`).join('');
+    const buildCQList = (questions, prefix) => {
+        const items = questions.map(q => `
+            <div class="cq-item">
+                <label class="toggle"><input type="checkbox" data-${prefix}-toggle="${q.id}" ${q.enabled?'checked':''}><span class="toggle-slider"></span></label>
+                <span class="cq-text">${escHtml(q.text)}</span>
+                <button class="cq-del" data-${prefix}-del="${q.id}">&#10005;</button>
+            </div>`).join('');
+        return `<div class="s-card"><div id="${prefix}-list">${items}</div>
+            <div class="cq-add">
+                <input type="text" id="${prefix}-input" placeholder="Neue Frage eingeben…">
+                <button id="${prefix}-add-btn">+ Hinzufügen</button>
+            </div></div>`;
+    };
 
     const abendQHtml = ABEND_FRAGEN.map((frage, i) => {
         const qS = s.eveningReflection.questions[i] || { enabled: true };
-        return `<div class="s-row">
-            <div>
-                <div class="s-row-label">Frage ${i+1}</div>
-                <div class="s-row-sub">${escHtml(frage)}</div>
-            </div>
-            <label class="toggle">
-                <input type="checkbox" data-eq="${i}" ${qS.enabled ? 'checked' : ''}>
-                <span class="toggle-slider"></span>
-            </label>
-        </div>`;
+        return `<div class="s-row"><div><div class="s-row-label">Frage ${i+1}</div><div class="s-row-sub">${escHtml(frage)}</div></div>
+            <label class="toggle"><input type="checkbox" data-eq="${i}" ${qS.enabled?'checked':''}><span class="toggle-slider"></span></label></div>`;
     }).join('');
 
     content.innerHTML = `
         <div class="s-section">
             <div class="s-section-title">Morgenroutine</div>
             <div class="s-card">
-                <div class="s-row">
-                    <div><div class="s-row-label">Morgenroutine</div></div>
-                    <label class="toggle"><input type="checkbox" id="s-mr-on" ${s.morningRoutine.enabled?'checked':''}><span class="toggle-slider"></span></label>
-                </div>
-                <div class="s-row">
-                    <div class="s-row-label">Uhrzeit</div>
-                    <input type="time" class="s-time" id="s-mr-time" value="${s.morningRoutine.time}">
-                </div>
-                <div class="s-row">
-                    <div><div class="s-row-label">Erinnerung</div><div class="s-row-sub">Push-Benachrichtigung</div></div>
-                    <label class="toggle"><input type="checkbox" id="s-mr-notif" ${s.morningRoutine.notificationEnabled?'checked':''}><span class="toggle-slider"></span></label>
-                </div>
-                <div class="s-row">
-                    <div><div class="s-row-label">Fokus-Frage</div><div class="s-row-sub">„Was möchtest du heute erreichen?"</div></div>
-                    <label class="toggle"><input type="checkbox" id="s-mr-mainq" ${s.morningRoutine.mainQuestionEnabled?'checked':''}><span class="toggle-slider"></span></label>
-                </div>
+                <div class="s-row"><div><div class="s-row-label">Morgenroutine</div></div>
+                    <label class="toggle"><input type="checkbox" id="s-mr-on" ${s.morningRoutine.enabled?'checked':''}><span class="toggle-slider"></span></label></div>
+                <div class="s-row"><div class="s-row-label">Uhrzeit</div>
+                    <input type="time" class="s-time" id="s-mr-time" value="${s.morningRoutine.time}"></div>
+                <div class="s-row"><div><div class="s-row-label">Erinnerung</div><div class="s-row-sub">Push-Benachrichtigung</div></div>
+                    <label class="toggle"><input type="checkbox" id="s-mr-notif" ${s.morningRoutine.notificationEnabled?'checked':''}><span class="toggle-slider"></span></label></div>
+                <div class="s-row"><div><div class="s-row-label">Fokus-Frage</div><div class="s-row-sub">„Was möchtest du heute erreichen?"</div></div>
+                    <label class="toggle"><input type="checkbox" id="s-mr-mainq" ${s.morningRoutine.mainQuestionEnabled?'checked':''}><span class="toggle-slider"></span></label></div>
             </div>
         </div>
-
         <div class="s-section">
             <div class="s-section-title">Individuelle Fragen (Morgen)</div>
-            <div class="s-card">
-                <div id="cq-list">${customQHtml}</div>
-                <div class="cq-add">
-                    <input type="text" id="cq-input" placeholder="Neue Frage eingeben…">
-                    <button id="cq-add-btn">+ Hinzufügen</button>
-                </div>
-            </div>
+            ${buildCQList(s.morningRoutine.customQuestions, 'mcq')}
         </div>
-
         <div class="s-section">
             <div class="s-section-title">Abendroutine</div>
             <div class="s-card">
-                <div class="s-row">
-                    <div><div class="s-row-label">Abendroutine</div></div>
-                    <label class="toggle"><input type="checkbox" id="s-er-on" ${s.eveningReflection.enabled?'checked':''}><span class="toggle-slider"></span></label>
-                </div>
-                <div class="s-row">
-                    <div class="s-row-label">Uhrzeit</div>
-                    <input type="time" class="s-time" id="s-er-time" value="${s.eveningReflection.time}">
-                </div>
-                <div class="s-row">
-                    <div><div class="s-row-label">Erinnerung</div><div class="s-row-sub">Push-Benachrichtigung</div></div>
-                    <label class="toggle"><input type="checkbox" id="s-er-notif" ${s.eveningReflection.notificationEnabled?'checked':''}><span class="toggle-slider"></span></label>
-                </div>
+                <div class="s-row"><div><div class="s-row-label">Abendroutine</div></div>
+                    <label class="toggle"><input type="checkbox" id="s-er-on" ${s.eveningReflection.enabled?'checked':''}><span class="toggle-slider"></span></label></div>
+                <div class="s-row"><div class="s-row-label">Uhrzeit</div>
+                    <input type="time" class="s-time" id="s-er-time" value="${s.eveningReflection.time}"></div>
+                <div class="s-row"><div><div class="s-row-label">Erinnerung</div><div class="s-row-sub">Push-Benachrichtigung</div></div>
+                    <label class="toggle"><input type="checkbox" id="s-er-notif" ${s.eveningReflection.notificationEnabled?'checked':''}><span class="toggle-slider"></span></label></div>
                 ${abendQHtml}
             </div>
+        </div>
+        <div class="s-section">
+            <div class="s-section-title">Individuelle Fragen (Abend)</div>
+            ${buildCQList(s.eveningReflection.customQuestions || [], 'ecq')}
         </div>`;
 
-    // Morgen toggles
-    document.getElementById('s-mr-on').onchange = e => saveSetting(s => { s.morningRoutine.enabled = e.target.checked; });
-    document.getElementById('s-mr-time').onchange = e => saveSetting(s => { s.morningRoutine.time = e.target.value; sendeNotificationSchedule(); });
-    document.getElementById('s-mr-notif').onchange = e => {
-        if (e.target.checked) requestNotifPermission(e.target);
-        else saveSetting(s => { s.morningRoutine.notificationEnabled = false; sendeNotificationSchedule(); });
-    };
+    // Morgen-Toggles
+    document.getElementById('s-mr-on').onchange    = e => saveSetting(s => { s.morningRoutine.enabled = e.target.checked; });
+    document.getElementById('s-mr-time').onchange  = e => saveSetting(s => { s.morningRoutine.time = e.target.value; sendeSchedule(); });
+    document.getElementById('s-mr-notif').onchange = e => e.target.checked ? reqNotifPerm(e.target) : saveSetting(s => { s.morningRoutine.notificationEnabled = false; sendeSchedule(); });
     document.getElementById('s-mr-mainq').onchange = e => saveSetting(s => { s.morningRoutine.mainQuestionEnabled = e.target.checked; });
 
-    // Abend toggles
-    document.getElementById('s-er-on').onchange = e => saveSetting(s => { s.eveningReflection.enabled = e.target.checked; });
-    document.getElementById('s-er-time').onchange = e => saveSetting(s => { s.eveningReflection.time = e.target.value; sendeNotificationSchedule(); });
-    document.getElementById('s-er-notif').onchange = e => {
-        if (e.target.checked) requestNotifPermission(e.target);
-        else saveSetting(s => { s.eveningReflection.notificationEnabled = false; sendeNotificationSchedule(); });
-    };
+    // Abend-Toggles
+    document.getElementById('s-er-on').onchange    = e => saveSetting(s => { s.eveningReflection.enabled = e.target.checked; });
+    document.getElementById('s-er-time').onchange  = e => saveSetting(s => { s.eveningReflection.time = e.target.value; sendeSchedule(); });
+    document.getElementById('s-er-notif').onchange = e => e.target.checked ? reqNotifPerm(e.target) : saveSetting(s => { s.eveningReflection.notificationEnabled = false; sendeSchedule(); });
 
-    // Evening questions
     content.querySelectorAll('[data-eq]').forEach(cb => {
-        cb.onchange = e => {
-            const i = parseInt(e.target.dataset.eq);
-            saveSetting(s => { if (s.eveningReflection.questions[i]) s.eveningReflection.questions[i].enabled = e.target.checked; });
-        };
+        cb.onchange = e => { const i = parseInt(e.target.dataset.eq); saveSetting(s => { if (s.eveningReflection.questions[i]) s.eveningReflection.questions[i].enabled = e.target.checked; }); };
     });
 
-    // Custom question toggles & delete
-    content.querySelectorAll('[data-cq-toggle]').forEach(cb => {
-        cb.onchange = e => {
-            const id = e.target.dataset.cqToggle;
-            saveSetting(s => {
-                const q = s.morningRoutine.customQuestions.find(q => String(q.id) === id);
-                if (q) q.enabled = e.target.checked;
-            });
-        };
-    });
-    content.querySelectorAll('[data-cq-del]').forEach(btn => {
-        btn.onclick = e => {
-            const id = e.target.dataset.cqDel;
-            saveSetting(s => {
-                s.morningRoutine.customQuestions = s.morningRoutine.customQuestions.filter(q => String(q.id) !== id);
-            });
-            renderSettings();
-        };
-    });
+    // Morgen custom Q
+    bindCQSection('mcq',
+        id => saveSetting(s => { const q = s.morningRoutine.customQuestions.find(q => String(q.id) === id); if (q) q.enabled = !q.enabled; }),
+        id => { saveSetting(s => { s.morningRoutine.customQuestions = s.morningRoutine.customQuestions.filter(q => String(q.id) !== id); }); renderSettings(); },
+        text => { saveSetting(s => { s.morningRoutine.customQuestions.push({ id: Date.now().toString(), text, enabled: true }); }); renderSettings(); zeigToast('Frage hinzugefügt'); }
+    );
 
-    // Add custom question
-    document.getElementById('cq-add-btn').onclick = () => {
-        const input = document.getElementById('cq-input');
-        const text = input.value.trim();
-        if (!text) return;
-        saveSetting(s => {
-            s.morningRoutine.customQuestions.push({
-                id: Date.now().toString(),
-                text,
-                enabled: true
-            });
-        });
-        input.value = '';
-        renderSettings();
-        zeigToast('Frage hinzugefügt');
-    };
-    document.getElementById('cq-input').onkeydown = e => {
-        if (e.key === 'Enter') document.getElementById('cq-add-btn').click();
-    };
+    // Abend custom Q
+    bindCQSection('ecq',
+        id => saveSetting(s => { const q = (s.eveningReflection.customQuestions||[]).find(q => String(q.id) === id); if (q) q.enabled = !q.enabled; }),
+        id => { saveSetting(s => { s.eveningReflection.customQuestions = (s.eveningReflection.customQuestions||[]).filter(q => String(q.id) !== id); }); renderSettings(); },
+        text => { saveSetting(s => { if (!s.eveningReflection.customQuestions) s.eveningReflection.customQuestions = []; s.eveningReflection.customQuestions.push({ id: Date.now().toString(), text, enabled: true }); }); renderSettings(); zeigToast('Frage hinzugefügt'); }
+    );
+}
+
+function bindCQSection(prefix, onToggle, onDelete, onAdd) {
+    const content = document.getElementById('settings-content');
+    content.querySelectorAll(`[data-${prefix}-toggle]`).forEach(cb => {
+        cb.onchange = e => { const id = e.target.dataset[`${prefix}Toggle`] || e.target.getAttribute(`data-${prefix}-toggle`); onToggle(id); };
+    });
+    content.querySelectorAll(`[data-${prefix}-del]`).forEach(btn => {
+        btn.onclick = e => { const id = e.target.getAttribute(`data-${prefix}-del`); onDelete(id); };
+    });
+    const addBtn = document.getElementById(`${prefix}-add-btn`);
+    const addInput = document.getElementById(`${prefix}-input`);
+    if (addBtn) addBtn.onclick = () => { const t = addInput.value.trim(); if (t) { onAdd(t); addInput.value = ''; } };
+    if (addInput) addInput.onkeydown = e => { if (e.key === 'Enter' && addBtn) addBtn.click(); };
 }
 
 function saveSetting(fn) {
-    const s = ladeSettings();
-    fn(s);
-    speichereSettings(s);
+    const s = ladeSettings(); fn(s); speichereSettings(s);
 }
 
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    PUSH NOTIFICATIONS
-═══════════════════════════════════════════ */
+════════════════════════════════════════ */
 function naechsteUhrzeit(h, m) {
-    const now = new Date();
-    const next = new Date(now);
-    next.setHours(h, m, 0, 0);
+    const now = new Date(); const next = new Date(now); next.setHours(h, m, 0, 0);
     if (next <= now) next.setDate(next.getDate() + 1);
     return next;
 }
 
-function sendeNotificationSchedule() {
+function sendeSchedule() {
     if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) return;
-    const s = ladeSettings();
-    const name = ladeName() || 'du';
-    const schedule = [];
-
+    const s = ladeSettings(); const name = ladeName() || 'du'; const schedule = [];
     if (s.morningRoutine.enabled && s.morningRoutine.notificationEnabled) {
         const [h, m] = s.morningRoutine.time.split(':').map(Number);
         schedule.push({ tag: 'morning', title: 'Morgen-Fokus', body: `Bereit für den Tag, ${name}?`, timestamp: naechsteUhrzeit(h, m).getTime() });
@@ -1013,39 +862,32 @@ function sendeNotificationSchedule() {
         const [h, m] = s.eveningReflection.time.split(':').map(Number);
         schedule.push({ tag: 'evening', title: 'Morgen-Fokus', body: `Bereit für die Reflexion, ${name}?`, timestamp: naechsteUhrzeit(h, m).getTime() });
     }
-
     navigator.serviceWorker.controller.postMessage({ type: 'SCHEDULE', schedule });
 }
 
-function requestNotifPermission(checkbox) {
-    if (!('Notification' in window)) { checkbox.checked = false; zeigToast('Benachrichtigungen werden nicht unterstützt'); return; }
+function reqNotifPerm(checkbox) {
+    if (!('Notification' in window)) { checkbox.checked = false; zeigToast('Benachrichtigungen nicht unterstützt'); return; }
     if (Notification.permission === 'granted') {
         saveSetting(s => {
             if (checkbox.id === 's-mr-notif') s.morningRoutine.notificationEnabled = true;
             if (checkbox.id === 's-er-notif') s.eveningReflection.notificationEnabled = true;
         });
-        sendeNotificationSchedule();
-        zeigToast('Erinnerungen aktiviert');
-        return;
+        sendeSchedule(); zeigToast('Erinnerungen aktiviert'); return;
     }
-    Notification.requestPermission().then(perm => {
-        if (perm === 'granted') {
+    Notification.requestPermission().then(p => {
+        if (p === 'granted') {
             saveSetting(s => {
                 if (checkbox.id === 's-mr-notif') s.morningRoutine.notificationEnabled = true;
                 if (checkbox.id === 's-er-notif') s.eveningReflection.notificationEnabled = true;
             });
-            sendeNotificationSchedule();
-            zeigToast('Erinnerungen aktiviert');
-        } else {
-            checkbox.checked = false;
-            zeigToast('Zugriff auf Benachrichtigungen verweigert');
-        }
+            sendeSchedule(); zeigToast('Erinnerungen aktiviert');
+        } else { checkbox.checked = false; zeigToast('Zugriff verweigert'); }
     });
 }
 
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    EXPORT
-═══════════════════════════════════════════ */
+════════════════════════════════════════ */
 function exportMD() {
     const eintraege = ladeEintraege();
     if (!eintraege.length) { zeigToast('Noch keine Einträge'); return; }
@@ -1056,58 +898,36 @@ function exportMD() {
         md += `## ${formatDatum(e.datum)}\n\n`;
         if (e.frage) md += `**Morgenfrage:** ${e.frage}\n\n`;
         md += `**Mein Ziel:** ${e.antwort}\n\n`;
-        if (e.customAntworten?.length) {
-            e.customAntworten.forEach(c => { md += `**${c.frage}** ${c.antwort}\n\n`; });
-        }
-        if (e.abendAntworten?.length) {
-            md += `**Abendreflexion:**\n\n`;
-            e.abendAntworten.forEach(a => { md += `> *${a.frage}*\n> ${a.antwort}\n\n`; });
-        }
+        if (e.customAntworten?.length) e.customAntworten.forEach(c => { md += `**${c.frage}** ${c.antwort}\n\n`; });
+        if (e.abendAntworten?.length) { md += `**Abendreflexion:**\n\n`; e.abendAntworten.forEach(a => { md += `> *${a.frage}*\n> ${a.antwort}\n\n`; }); }
         md += '---\n\n';
     });
     const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
-    const url  = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `morgen-fokus-${heute()}.md`;
-    a.click(); URL.revokeObjectURL(url);
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = `morgen-fokus-${heute()}.md`; a.click(); URL.revokeObjectURL(url);
     zeigToast('Export gestartet');
 }
 
-/* ═══════════════════════════════════════════
-   MENÜ & SETTINGS
-═══════════════════════════════════════════ */
-function toggleMenu() { document.body.classList.toggle('menu-open'); }
-function schliesseMenu() { document.body.classList.remove('menu-open'); }
+/* ════════════════════════════════════════
+   MENÜ & NAVIGATION
+════════════════════════════════════════ */
+const toggleMenu    = () => document.body.classList.toggle('menu-open');
+const schliesseMenu = () => document.body.classList.remove('menu-open');
+const oeffneSettings = () => { schliesseMenu(); renderSettings(); document.getElementById('settings-overlay').classList.add('open'); };
+const schliesseSettings = () => document.getElementById('settings-overlay').classList.remove('open');
 
-function oeffneSettings() {
-    schliesseMenu();
-    renderSettings();
-    document.getElementById('settings-overlay').classList.add('open');
-}
-function schliesseSettings() {
-    document.getElementById('settings-overlay').classList.remove('open');
-}
-
-/* ═══════════════════════════════════════════
-   PWA: INSTALL BANNER
-═══════════════════════════════════════════ */
+/* ════════════════════════════════════════
+   PWA INSTALL
+════════════════════════════════════════ */
 let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-    e.preventDefault(); deferredPrompt = e;
-    document.getElementById('install-banner').classList.add('visible');
-});
-document.getElementById('install-yes').addEventListener('click', async () => {
-    document.getElementById('install-banner').classList.remove('visible');
-    if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
-});
-document.getElementById('install-no').addEventListener('click', () => {
-    document.getElementById('install-banner').classList.remove('visible'); deferredPrompt = null;
-});
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; document.getElementById('install-banner').classList.add('visible'); });
+document.getElementById('install-yes').addEventListener('click', async () => { document.getElementById('install-banner').classList.remove('visible'); if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; } });
+document.getElementById('install-no').addEventListener('click', () => { document.getElementById('install-banner').classList.remove('visible'); deferredPrompt = null; });
 window.addEventListener('appinstalled', () => { zeigToast('App installiert!'); deferredPrompt = null; });
 
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    EVENT LISTENER
-═══════════════════════════════════════════ */
+════════════════════════════════════════ */
 document.getElementById('menu-btn').addEventListener('click', () => { renderSidebar(); toggleMenu(); });
 document.getElementById('overlay').addEventListener('click', schliesseMenu);
 document.getElementById('routine-btn').addEventListener('click', oeffneSettings);
@@ -1117,31 +937,22 @@ document.getElementById('export-btn').addEventListener('click', exportMD);
 document.getElementById('antwort-input').addEventListener('keydown', e => { if (e.key === 'Enter') verarbeiteAntwort(); });
 
 document.getElementById('name-input').addEventListener('input', e => {
-    speichereName(e.target.value.trim());
+    speichereName(e.target.value);
+    renderMainScreen(); // Echtzeit-Update der Begrüßung
 });
-document.getElementById('name-input').addEventListener('blur', () => {
-    sendeNotificationSchedule();
-});
+document.getElementById('name-input').addEventListener('blur', sendeSchedule);
 
-/* ═══════════════════════════════════════════
+/* ════════════════════════════════════════
    START
-═══════════════════════════════════════════ */
+════════════════════════════════════════ */
 document.getElementById('name-input').value = ladeName();
 renderMainScreen();
+setInterval(() => { const h = ladeHeute(); if (h && !h.activeQuestion) renderMainScreen(); }, 60000);
 
-// Abend-Check alle 60 Sekunden
-setInterval(() => {
-    const h = ladeHeute();
-    if (h && !h.activeQuestion) renderMainScreen();
-}, 60000);
-
-// Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
-            .then(reg => {
-                navigator.serviceWorker.ready.then(() => sendeNotificationSchedule());
-            })
+            .then(() => navigator.serviceWorker.ready.then(sendeSchedule))
             .catch(err => console.log('SW Fehler:', err));
     });
 }
