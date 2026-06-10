@@ -946,6 +946,18 @@ document.getElementById('name-input').addEventListener('blur', sendeSchedule);
    START
 ════════════════════════════════════════ */
 document.getElementById('name-input').value = ladeName();
+
+// Migration: patch stored greeting if it has no template (old data)
+(function migrateGreeting() {
+    const h = ladeHeute();
+    if (!h) return;
+    const greetMsg = h.chat.find(m => m.key === 'greet');
+    if (greetMsg && !greetMsg.template) {
+        greetMsg.template = pickRand(begruessungsListe);
+        speichereHeute(h);
+    }
+})();
+
 renderMainScreen();
 setInterval(() => { const h = ladeHeute(); if (h && !h.activeQuestion) renderMainScreen(); }, 60000);
 
