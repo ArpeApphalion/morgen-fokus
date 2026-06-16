@@ -125,9 +125,9 @@
         #export-btn:hover { background: var(--accent); color: #121212; }
 
         /* ── Main ── */
-        #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
 
-        /* ── Morning view (classic, before first answer) ── */
+        /* ── Morning view ── */
         #morning-view {
             flex: 1; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
@@ -143,10 +143,11 @@
             margin-bottom: 28px; max-width: 520px;
         }
 
-        /* ── Chat view (after first answer) ── */
+        /* ── Chat view ── */
         #chat-container {
             flex: 1; overflow-y: auto; padding: 20px 16px 12px;
             display: none; flex-direction: column; gap: 10px;
+            min-height: 0;
         }
         #chat-container.visible { display: flex; }
         #chat-container::-webkit-scrollbar { width: 4px; }
@@ -161,9 +162,46 @@
         .chat-msg.greeting { align-self: center; background: transparent; color: var(--accent); font-size: 1.1rem; font-weight: 700; padding: 4px 0; text-align: center; max-width: 100%; }
         .chat-divider { align-self: center; font-size: .78rem; color: var(--text-muted); padding: 4px 14px; background: var(--surface2); border-radius: 99px; margin: 6px 0; }
 
+        /* ── Glaubenssatz ── */
+        .chat-msg.glaubenssatz {
+            align-self: center;
+            background: linear-gradient(135deg, rgba(187,134,252,.12), rgba(153,101,244,.2));
+            border: 1px solid rgba(187,134,252,.3);
+            color: var(--accent);
+            font-style: italic;
+            font-size: 1.05rem;
+            text-align: center;
+            max-width: 92%;
+            border-radius: 14px;
+            padding: 16px 22px;
+            margin: 6px 0;
+        }
+
+        /* ── Typing indicator ── */
+        .typing-indicator {
+            align-self: flex-start;
+            background: var(--surface);
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            padding: 14px 18px;
+            display: flex; gap: 5px; align-items: center;
+        }
+        .typing-indicator span {
+            width: 7px; height: 7px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: bounce 1.1s infinite;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: .18s; }
+        .typing-indicator span:nth-child(3) { animation-delay: .36s; }
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: .6; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
         /* ── Input area ── */
         #input-area {
-            padding: 10px 12px; display: none; gap: 8px; align-items: center;
+            padding: 10px 12px; display: none; gap: 8px; align-items: flex-end;
             background: var(--bg); border-top: 1px solid #222; flex-shrink: 0;
         }
         #input-area.visible { display: flex; }
@@ -173,23 +211,25 @@
             border: 1px solid transparent; border-radius: 24px;
             background: var(--surface); color: var(--text); outline: none;
             transition: border-color var(--anim);
+            resize: none; overflow-y: hidden;
+            line-height: 1.5;
+            min-height: 46px;
+            max-height: 132px;
+            font-family: inherit;
         }
         #antwort-input:focus { border-color: var(--accent); }
 
-        /* Morning mode: input looks like before */
-        #main.morning-mode #input-area { padding: 0 24px 32px; border-top: none; }
+        /* Morning mode styles */
+        #main.morning-mode #input-area { padding: 0 24px 32px; border-top: none; flex-direction: column; gap: 16px; align-items: center; }
         #main.morning-mode #antwort-input {
             border-radius: 8px; padding: 15px;
             box-shadow: inset 0 0 5px rgba(0,0,0,.4);
-            max-width: 540px; margin: 0 auto;
+            max-width: 540px; width: 100%;
         }
         #main.morning-mode #senden-btn {
             width: auto; border-radius: 8px; padding: 15px 36px;
             font-size: 1rem; font-weight: 700; flex-shrink: 0;
         }
-        /* Morning: wrap input + btn centered */
-        #main.morning-mode #input-area { flex-direction: column; gap: 16px; align-items: center; }
-        #main.morning-mode #antwort-input { width: 100%; max-width: 540px; }
 
         #senden-btn {
             background: var(--accent); color: #121212; border: none;
@@ -238,7 +278,7 @@
         .s-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #2a2a2a; gap: 12px; }
         .s-row:last-child { border-bottom: none; }
         .s-row-label { font-size: .95rem; color: var(--text); flex: 1; }
-        .s-row-sub { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
+        .s-row-sub { font-size: .78rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
         .s-time { background: var(--surface2); border: 1px solid #444; color: var(--text); padding: 7px 10px; border-radius: 8px; font-size: .9rem; width: 96px; text-align: center; outline: none; color-scheme: dark; }
 
         .toggle { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
@@ -294,7 +334,7 @@
     </div>
     <div id="chat-container"></div>
     <div id="input-area">
-        <input type="text" id="antwort-input" placeholder="Das will ich heute erreichen…" autocomplete="off">
+        <textarea id="antwort-input" rows="1" placeholder="Das will ich heute erreichen…"></textarea>
         <button id="senden-btn">&#10148;</button>
     </div>
 </main>
@@ -377,19 +417,37 @@ const fragenListe = [
 ];
 
 const ABEND_FRAGEN = [
-    "Was hast Du heute erreicht?",
-    "Welcher Moment hat Dich heute stolz gemacht?",
-    "Was nimmst du dir für morgen vor?"
+    "Was hast Du heute erreicht, was dich deinen Zielen näherbringt?",
+    "Was hättest Du heute anders gemacht, wenn Du keine Angst hättest?",
+    "Wovor hattest du Angst?",
+    "Wo hast Du Dich heute priorisiert?",
+    "Wann hast Du Dich heute lebendig gefühlt?",
+    "Wann hast Du gespürt: Das bin wirklich ich?",
+    "Wann hast du einen positiven Unterschied gemacht?",
+    "Ist Dein Selbstumgang Dir noch dienlich?"
+];
+
+/* Groups that must be toggled together: [1,2] and [4,5,6] (0-based indices) */
+const ABEND_GRUPPEN = [
+    { ids: [0] },
+    { ids: [1, 2] },
+    { ids: [3] },
+    { ids: [4, 5, 6] },
+    { ids: [7] }
 ];
 
 const DEFAULT_SETTINGS = {
     morningRoutine: {
         enabled: true, time: "06:00", notificationEnabled: true,
-        mainQuestionEnabled: true, customQuestions: []
+        mainQuestionEnabled: true, customQuestions: [], glaubenssaetze: []
     },
     eveningReflection: {
         enabled: true, time: "21:00", notificationEnabled: true,
-        questions: [{ id: 0, enabled: true }, { id: 1, enabled: true }, { id: 2, enabled: true }],
+        questions: [
+            {id:0,enabled:true},{id:1,enabled:true},{id:2,enabled:true},
+            {id:3,enabled:true},{id:4,enabled:true},{id:5,enabled:true},
+            {id:6,enabled:true},{id:7,enabled:true}
+        ],
         customQuestions: []
     }
 };
@@ -397,17 +455,22 @@ const DEFAULT_SETTINGS = {
 /* ════════════════════════════════════════
    STORAGE
 ════════════════════════════════════════ */
-const ladeName    = ()  => localStorage.getItem('mf_name') || '';
-const speichereName = n => localStorage.setItem('mf_name', n);
+const ladeName      = ()  => localStorage.getItem('mf_name') || '';
+const speichereName = n   => localStorage.setItem('mf_name', n);
 
 function ladeSettings() {
     try {
-        const s = JSON.parse(localStorage.getItem('mf_settings') || '{}');
-        const mr = { ...DEFAULT_SETTINGS.morningRoutine, ...(s.morningRoutine || {}) };
-        mr.customQuestions = s.morningRoutine?.customQuestions || [];
-        const er = { ...DEFAULT_SETTINGS.eveningReflection, ...(s.eveningReflection || {}) };
-        er.questions = s.eveningReflection?.questions || DEFAULT_SETTINGS.eveningReflection.questions;
-        er.customQuestions = s.eveningReflection?.customQuestions || [];
+        const raw = JSON.parse(localStorage.getItem('mf_settings') || '{}');
+        const mr = { ...DEFAULT_SETTINGS.morningRoutine, ...(raw.morningRoutine || {}) };
+        mr.customQuestions  = raw.morningRoutine?.customQuestions || [];
+        mr.glaubenssaetze   = raw.morningRoutine?.glaubenssaetze || [];
+        const er = { ...DEFAULT_SETTINGS.eveningReflection, ...(raw.eveningReflection || {}) };
+        er.customQuestions  = raw.eveningReflection?.customQuestions || [];
+        const storedEQ = raw.eveningReflection?.questions || [];
+        er.questions = DEFAULT_SETTINGS.eveningReflection.questions.map(dq => ({
+            ...dq,
+            ...(storedEQ.find(sq => sq.id === dq.id) || {})
+        }));
         return { morningRoutine: mr, eveningReflection: er };
     } catch { return JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); }
 }
@@ -426,9 +489,10 @@ const speichereHeute = h => localStorage.setItem('mf_heute', JSON.stringify(h));
 /* ════════════════════════════════════════
    HILFSFUNKTIONEN
 ════════════════════════════════════════ */
-const pickRand = arr => arr[Math.floor(Math.random() * arr.length)];
-const escHtml  = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const heute    = () => new Date().toISOString().slice(0, 10);
+const pickRand  = arr => arr[Math.floor(Math.random() * arr.length)];
+const escHtml   = s   => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const heute     = ()  => new Date().toISOString().slice(0, 10);
+const warte     = ms  => new Promise(r => setTimeout(r, ms));
 
 function resolveGreet(template, name) {
     if (!template) return '';
@@ -446,6 +510,69 @@ function zeigToast(txt) {
     const t = document.getElementById('toast');
     t.textContent = txt; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function msgToHtml(msg, name) {
+    if (msg.role === 'divider')
+        return `<div class="chat-divider">${escHtml(msg.text)}</div>`;
+    const displayText = msg.template ? resolveGreet(msg.template, name) : msg.text;
+    const cls = msg.isGreeting    ? 'chat-msg greeting' :
+                msg.isGlaubenssatz ? 'chat-msg glaubenssatz' :
+                `chat-msg ${msg.role}`;
+    return `<div class="${cls}">${escHtml(displayText)}</div>`;
+}
+
+/* ════════════════════════════════════════
+   ANIMATION
+════════════════════════════════════════ */
+const animatedKeys = new Set();
+const pendingKeys  = new Set();
+
+function seedAnimated() {
+    const h = ladeHeute();
+    if (h) h.chat.forEach(m => { if (m.key) animatedKeys.add(m.key); });
+}
+
+async function animateMessages(container, msgs, name) {
+    msgs.forEach(m => pendingKeys.add(m.key));
+    for (const msg of msgs) {
+        /* spinning dots */
+        const spinner = document.createElement('div');
+        spinner.className = 'typing-indicator';
+        spinner.innerHTML = '<span></span><span></span><span></span>';
+        container.appendChild(spinner);
+        container.scrollTop = container.scrollHeight;
+        await warte(380 + Math.random() * 380);
+        spinner.remove();
+
+        /* render element */
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = msgToHtml(msg, name);
+        const el = wrapper.firstChild;
+        container.appendChild(el);
+
+        /* word-by-word reveal */
+        const displayText = msg.template ? resolveGreet(msg.template, name) : msg.text;
+        if (msg.role !== 'divider') {
+            const words = displayText.split(' ');
+            el.textContent = '';
+            for (let i = 0; i < words.length; i++) {
+                el.textContent += (i > 0 ? ' ' : '') + words[i];
+                container.scrollTop = container.scrollHeight;
+                await warte(42);
+            }
+        }
+
+        pendingKeys.delete(msg.key);
+        animatedKeys.add(msg.key);
+        container.scrollTop = container.scrollHeight;
+    }
+    /* refresh input visibility after animation */
+    const h = ladeHeute();
+    if (h) {
+        const ia = document.getElementById('input-area');
+        ia.classList.toggle('visible', !!h.activeQuestion);
+    }
 }
 
 /* ════════════════════════════════════════
@@ -473,7 +600,7 @@ function archivieren(h) {
     if (!morgenAns) return;
     const morgenQ = h.chat.find(m => m.key === 'morgen_main_q');
     const abendAntworten = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 8; i++) {
         const q = h.chat.find(m => m.key === `abend_${i}_q`);
         const a = h.chat.find(m => m.key === `abend_${i}_ans`);
         if (q && a) abendAntworten.push({ frage: q.text, antwort: a.text });
@@ -536,9 +663,9 @@ function checkRollover() {
 
 function naechsteFrage(h, s) {
     const aq = h.activeQuestion;
-    const enabledCustom = s.morningRoutine.customQuestions.filter(q => q.enabled);
-    const enabledAbend   = s.eveningReflection.questions.filter(q => q.enabled);
-    const enabledAbendCustom = (s.eveningReflection.customQuestions || []).filter(q => q.enabled);
+    const enabledCustom      = s.morningRoutine.customQuestions.filter(q => q.enabled);
+    const enabledAbend        = s.eveningReflection.questions.filter(q => q.enabled);
+    const enabledAbendCustom  = (s.eveningReflection.customQuestions || []).filter(q => q.enabled);
 
     if (aq === 'morgen_main' || aq === 'morgen_free') {
         if (enabledCustom.length > 0) return 'custom_' + enabledCustom[0].id;
@@ -573,7 +700,7 @@ function checkAbendTransition(h, s, name) {
     const abendGreetTemplate = pickRand(abendBegruessungsListe);
     h.chat.push({ role: 'divider', text: '— Abendreflexion —', key: 'abend_divider' });
     h.chat.push({ role: 'bot', text: resolveGreet(abendGreetTemplate, name), key: 'abend_intro', isGreeting: true, template: abendGreetTemplate });
-    const enabledAbend = s.eveningReflection.questions.filter(q => q.enabled);
+    const enabledAbend       = s.eveningReflection.questions.filter(q => q.enabled);
     const enabledAbendCustom = (s.eveningReflection.customQuestions || []).filter(q => q.enabled);
     if (enabledAbend.length > 0) {
         h.chat.push({ role: 'bot', text: ABEND_FRAGEN[enabledAbend[0].id], key: 'abend_0_q' });
@@ -598,8 +725,9 @@ function verarbeiteAntwort() {
     const aq = h.activeQuestion;
     if (!aq) return;
 
-    if (aq === 'morgen_main')       h.chat.push({ role: 'user', text, key: 'morgen_main_ans' });
-    else if (aq === 'morgen_free')  h.chat.push({ role: 'user', text, key: 'morgen_free_ans' });
+    /* store answer */
+    if (aq === 'morgen_main')      h.chat.push({ role: 'user', text, key: 'morgen_main_ans' });
+    else if (aq === 'morgen_free') h.chat.push({ role: 'user', text, key: 'morgen_free_ans' });
     else if (aq.startsWith('custom_')) {
         const id = aq.replace('custom_', '');
         h.chat.push({ role: 'user', text, key: 'custom_ans_' + id });
@@ -611,59 +739,83 @@ function verarbeiteAntwort() {
         h.chat.push({ role: 'user', text, key: `abend_${idx}_ans` });
     }
 
+    /* mark user answer as already-shown */
+    const userMsg = h.chat[h.chat.length - 1];
+    if (userMsg) animatedKeys.add(userMsg.key);
+
     const next = naechsteFrage(h, s);
     h.activeQuestion = next;
 
+    /* build next bot message(s) */
+    const newBotMsgs = [];
     if (next) {
         if (next.startsWith('custom_')) {
             const id = next.replace('custom_', '');
             const q = s.morningRoutine.customQuestions.find(q => String(q.id) === id);
-            if (q) h.chat.push({ role: 'bot', text: q.text, key: 'custom_q_' + id });
+            if (q) { const m = { role: 'bot', text: q.text, key: 'custom_q_' + id }; h.chat.push(m); newBotMsgs.push(m); }
         } else if (next.startsWith('abend_custom_')) {
             const id = next.replace('abend_custom_', '');
             const q = (s.eveningReflection.customQuestions || []).find(q => String(q.id) === id);
-            if (q) h.chat.push({ role: 'bot', text: q.text, key: 'abend_custom_q_' + id });
+            if (q) { const m = { role: 'bot', text: q.text, key: 'abend_custom_q_' + id }; h.chat.push(m); newBotMsgs.push(m); }
         } else if (next.startsWith('abend_')) {
             const idx = parseInt(next.replace('abend_', ''));
             const enabledAbend = s.eveningReflection.questions.filter(q => q.enabled);
-            if (enabledAbend[idx] !== undefined)
-                h.chat.push({ role: 'bot', text: ABEND_FRAGEN[enabledAbend[idx].id], key: `abend_${idx}_q` });
+            if (enabledAbend[idx] !== undefined) {
+                const m = { role: 'bot', text: ABEND_FRAGEN[enabledAbend[idx].id], key: `abend_${idx}_q` };
+                h.chat.push(m); newBotMsgs.push(m);
+            }
+        }
+    }
+
+    /* add Glaubenssatz when morning is fully done */
+    const isMorningDone = next === null && !aq.startsWith('abend_') && !aq.startsWith('abend_custom_');
+    if (isMorningDone && !h.chat.some(m => m.key === 'glaubenssatz')) {
+        const gs = (s.morningRoutine.glaubenssaetze || []).filter(g => g.enabled);
+        if (gs.length > 0) {
+            const chosen = pickRand(gs);
+            const gm = { role: 'bot', text: chosen.text, key: 'glaubenssatz', isGlaubenssatz: true };
+            h.chat.push(gm);
+            newBotMsgs.push(gm);
         }
     }
 
     speichereHeute(h);
     archivieren(h);
     input.value = '';
-    renderMainScreen();
+    resetInputHeight();
+
+    /* switch to chat view / update static messages, then animate new ones */
+    renderMainScreenStatic(h, s, name);
+
+    if (newBotMsgs.length > 0) {
+        const cc = document.getElementById('chat-container');
+        animateMessages(cc, newBotMsgs, name);
+    } else {
+        /* no new messages → just update input visibility */
+        document.getElementById('input-area').classList.toggle('visible', !!h.activeQuestion);
+    }
 }
 
 /* ════════════════════════════════════════
-   RENDER MAIN
+   RENDER
 ════════════════════════════════════════ */
-function renderMainScreen() {
-    let h = checkRollover();
-    const s = ladeSettings();
-    const name = ladeName();
+function renderMainScreenStatic(h, s, name) {
+    /* can be called with pre-loaded data or load fresh */
+    if (!h) { h = checkRollover(); s = ladeSettings(); name = ladeName(); }
 
-    if (!h.activeQuestion) {
-        if (checkAbendTransition(h, s, name)) speichereHeute(h);
-    }
-
-    const hasAnswered = h.chat.some(m => m.role === 'user');
-    const main = document.getElementById('main');
-    const morningView = document.getElementById('morning-view');
+    const hasAnswered   = h.chat.some(m => m.role === 'user');
+    const main          = document.getElementById('main');
+    const morningView   = document.getElementById('morning-view');
     const chatContainer = document.getElementById('chat-container');
-    const inputArea = document.getElementById('input-area');
-    const input = document.getElementById('antwort-input');
-    const btn = document.getElementById('senden-btn');
+    const inputArea     = document.getElementById('input-area');
+    const input         = document.getElementById('antwort-input');
 
     if (!hasAnswered) {
-        // Classic morning view
         morningView.classList.remove('hidden');
         chatContainer.classList.remove('visible');
         main.classList.add('morning-mode');
 
-        const greetMsg = h.chat.find(m => m.key === 'greet');
+        const greetMsg    = h.chat.find(m => m.key === 'greet');
         const questionMsg = h.chat.find(m => m.key === 'morgen_main_q') ||
                             h.chat.find(m => m.role === 'bot' && m.key !== 'greet');
 
@@ -675,35 +827,81 @@ function renderMainScreen() {
         if (h.activeQuestion) {
             inputArea.classList.add('visible');
             input.placeholder = 'Das will ich heute erreichen…';
-            btn.textContent = 'Absenden';
-            btn.style.cssText = '';
+            document.getElementById('senden-btn').textContent = 'Absenden';
         } else {
             inputArea.classList.remove('visible');
         }
     } else {
-        // Chat view
         morningView.classList.add('hidden');
         chatContainer.classList.add('visible');
         main.classList.remove('morning-mode');
-        btn.innerHTML = '&#10148;';
-        btn.style.cssText = '';
+        document.getElementById('senden-btn').innerHTML = '&#10148;';
 
-        chatContainer.innerHTML = h.chat.map(msg => {
-            if (msg.role === 'divider')
-                return `<div class="chat-divider">${escHtml(msg.text)}</div>`;
-            const displayText = msg.template ? resolveGreet(msg.template, name) : msg.text;
-            const cls = msg.isGreeting ? 'chat-msg greeting' : `chat-msg ${msg.role}`;
-            return `<div class="${cls}">${escHtml(displayText)}</div>`;
-        }).join('');
+        /* render only already-animated messages */
+        chatContainer.innerHTML = h.chat
+            .filter(m => animatedKeys.has(m.key))
+            .map(m => msgToHtml(m, name))
+            .join('');
         chatContainer.scrollTop = chatContainer.scrollHeight;
 
-        if (h.activeQuestion) {
+        /* hide input while animation pending; animateMessages re-shows it */
+        if (!h.activeQuestion || pendingKeys.size > 0) {
+            inputArea.classList.remove('visible');
+        } else {
             inputArea.classList.add('visible');
             input.placeholder = 'Deine Antwort…';
-        } else {
-            inputArea.classList.remove('visible');
         }
     }
+}
+
+function renderMainScreen() {
+    let h = checkRollover();
+    const s = ladeSettings();
+    const name = ladeName();
+
+    if (!h.activeQuestion) {
+        const transitioned = checkAbendTransition(h, s, name);
+        if (transitioned) speichereHeute(h);
+    }
+
+    renderMainScreenStatic(h, s, name);
+
+    /* animate any new messages not yet shown (e.g. from evening transition) */
+    if (h.chat.some(m => m.role === 'user')) {
+        const cc = document.getElementById('chat-container');
+        const newMsgs = h.chat.filter(m => !animatedKeys.has(m.key) && !pendingKeys.has(m.key));
+        if (newMsgs.length > 0) animateMessages(cc, newMsgs, name);
+    }
+}
+
+/* ════════════════════════════════════════
+   TEXTAREA AUTO-GROW
+════════════════════════════════════════ */
+function resetInputHeight() {
+    const el = document.getElementById('antwort-input');
+    el.style.height = '';
+    el.style.overflowY = 'hidden';
+}
+
+document.getElementById('antwort-input').addEventListener('input', function() {
+    this.style.height = 'auto';
+    const max = 132; /* ~4 lines */
+    this.style.height = Math.min(this.scrollHeight, max) + 'px';
+    this.style.overflowY = this.scrollHeight > max ? 'auto' : 'hidden';
+});
+
+/* ════════════════════════════════════════
+   KEYBOARD / VIEWPORT
+════════════════════════════════════════ */
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+        const vh = window.visualViewport.height;
+        document.getElementById('main').style.height = vh + 'px';
+        /* scroll chat to bottom so question stays visible */
+        const cc = document.getElementById('chat-container');
+        if (cc.classList.contains('visible'))
+            setTimeout(() => { cc.scrollTop = cc.scrollHeight; }, 60);
+    });
 }
 
 /* ════════════════════════════════════════
@@ -711,9 +909,9 @@ function renderMainScreen() {
 ════════════════════════════════════════ */
 function renderSidebar() {
     const eintraege = ladeEintraege();
-    const liste = document.getElementById('entries-list');
-    const counter = document.getElementById('entry-count');
-    const tagHeute = getAppDay();
+    const liste     = document.getElementById('entries-list');
+    const counter   = document.getElementById('entry-count');
+    const tagHeute  = getAppDay();
     counter.textContent = eintraege.length ? eintraege.length + (eintraege.length === 1 ? ' Eintrag' : ' Einträge') : '';
     if (!eintraege.length) { liste.innerHTML = '<div id="empty-state">Noch keine Einträge.<br>Schreib dein erstes Ziel!</div>'; return; }
     const sortiert = [...eintraege].sort((a, b) => b.datum.localeCompare(a.datum));
@@ -736,10 +934,10 @@ function renderSidebar() {
    SETTINGS
 ════════════════════════════════════════ */
 function renderSettings() {
-    const s = ladeSettings();
+    const s       = ladeSettings();
     const content = document.getElementById('settings-content');
 
-    const buildCQList = (questions, prefix) => {
+    const buildCQList = (questions, prefix, addPlaceholder) => {
         const items = questions.map(q => `
             <div class="cq-item">
                 <label class="toggle"><input type="checkbox" data-${prefix}-toggle="${q.id}" ${q.enabled?'checked':''}><span class="toggle-slider"></span></label>
@@ -748,15 +946,30 @@ function renderSettings() {
             </div>`).join('');
         return `<div class="s-card"><div id="${prefix}-list">${items}</div>
             <div class="cq-add">
-                <input type="text" id="${prefix}-input" placeholder="Neue Frage eingeben…">
+                <input type="text" id="${prefix}-input" placeholder="${escHtml(addPlaceholder || 'Neue Frage eingeben…')}">
                 <button id="${prefix}-add-btn">+ Hinzufügen</button>
             </div></div>`;
     };
 
-    const abendQHtml = ABEND_FRAGEN.map((frage, i) => {
-        const qS = s.eveningReflection.questions[i] || { enabled: true };
-        return `<div class="s-row"><div><div class="s-row-label">Frage ${i+1}</div><div class="s-row-sub">${escHtml(frage)}</div></div>
-            <label class="toggle"><input type="checkbox" data-eq="${i}" ${qS.enabled?'checked':''}><span class="toggle-slider"></span></label></div>`;
+    /* Evening built-in questions with group toggles */
+    const abendQHtml = ABEND_GRUPPEN.map(gruppe => {
+        const groupEnabled = gruppe.ids.every(id => {
+            const q = s.eveningReflection.questions.find(q => q.id === id);
+            return q && q.enabled;
+        });
+        const labelNums = gruppe.ids.map(i => i + 1);
+        const groupLabel = labelNums.length === 1
+            ? `Frage ${labelNums[0]}`
+            : `Fragen ${labelNums.join(' & ')}`;
+        const fragenDisplay = gruppe.ids.map(id => escHtml(ABEND_FRAGEN[id])).join('<br>');
+        const dataAttr = gruppe.ids.join(',');
+        return `<div class="s-row">
+            <div style="flex:1">
+                <div class="s-row-label">${groupLabel}</div>
+                <div class="s-row-sub">${fragenDisplay}</div>
+            </div>
+            <label class="toggle"><input type="checkbox" data-eq-group="${dataAttr}" ${groupEnabled?'checked':''}><span class="toggle-slider"></span></label>
+        </div>`;
     }).join('');
 
     content.innerHTML = `
@@ -778,6 +991,11 @@ function renderSettings() {
             ${buildCQList(s.morningRoutine.customQuestions, 'mcq')}
         </div>
         <div class="s-section">
+            <div class="s-section-title">Glaubenssätze</div>
+            <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:8px;padding-left:4px">Wird nach deiner Morgenantwort zufällig angezeigt.</div>
+            ${buildCQList(s.morningRoutine.glaubenssaetze || [], 'gs', 'Neuen Glaubenssatz eingeben…')}
+        </div>
+        <div class="s-section">
             <div class="s-section-title">Abendroutine</div>
             <div class="s-card">
                 <div class="s-row"><div><div class="s-row-label">Abendroutine</div></div>
@@ -794,29 +1012,45 @@ function renderSettings() {
             ${buildCQList(s.eveningReflection.customQuestions || [], 'ecq')}
         </div>`;
 
-    // Morgen-Toggles
+    /* Morgen-Toggles */
     document.getElementById('s-mr-on').onchange    = e => saveSetting(s => { s.morningRoutine.enabled = e.target.checked; });
     document.getElementById('s-mr-time').onchange  = e => saveSetting(s => { s.morningRoutine.time = e.target.value; sendeSchedule(); });
     document.getElementById('s-mr-notif').onchange = e => e.target.checked ? reqNotifPerm(e.target) : saveSetting(s => { s.morningRoutine.notificationEnabled = false; sendeSchedule(); });
     document.getElementById('s-mr-mainq').onchange = e => saveSetting(s => { s.morningRoutine.mainQuestionEnabled = e.target.checked; });
 
-    // Abend-Toggles
+    /* Abend-Toggles */
     document.getElementById('s-er-on').onchange    = e => saveSetting(s => { s.eveningReflection.enabled = e.target.checked; });
     document.getElementById('s-er-time').onchange  = e => saveSetting(s => { s.eveningReflection.time = e.target.value; sendeSchedule(); });
     document.getElementById('s-er-notif').onchange = e => e.target.checked ? reqNotifPerm(e.target) : saveSetting(s => { s.eveningReflection.notificationEnabled = false; sendeSchedule(); });
 
-    content.querySelectorAll('[data-eq]').forEach(cb => {
-        cb.onchange = e => { const i = parseInt(e.target.dataset.eq); saveSetting(s => { if (s.eveningReflection.questions[i]) s.eveningReflection.questions[i].enabled = e.target.checked; }); };
+    /* Evening question group toggles */
+    content.querySelectorAll('[data-eq-group]').forEach(cb => {
+        cb.onchange = e => {
+            const ids = e.target.getAttribute('data-eq-group').split(',').map(Number);
+            saveSetting(s => {
+                ids.forEach(id => {
+                    const q = s.eveningReflection.questions.find(q => q.id === id);
+                    if (q) q.enabled = e.target.checked;
+                });
+            });
+        };
     });
 
-    // Morgen custom Q
+    /* Morgen custom Q */
     bindCQSection('mcq',
         id => saveSetting(s => { const q = s.morningRoutine.customQuestions.find(q => String(q.id) === id); if (q) q.enabled = !q.enabled; }),
         id => { saveSetting(s => { s.morningRoutine.customQuestions = s.morningRoutine.customQuestions.filter(q => String(q.id) !== id); }); renderSettings(); },
         text => { saveSetting(s => { s.morningRoutine.customQuestions.push({ id: Date.now().toString(), text, enabled: true }); }); renderSettings(); zeigToast('Frage hinzugefügt'); }
     );
 
-    // Abend custom Q
+    /* Glaubenssätze */
+    bindCQSection('gs',
+        id => saveSetting(s => { const g = (s.morningRoutine.glaubenssaetze||[]).find(g => String(g.id) === id); if (g) g.enabled = !g.enabled; }),
+        id => { saveSetting(s => { s.morningRoutine.glaubenssaetze = (s.morningRoutine.glaubenssaetze||[]).filter(g => String(g.id) !== id); }); renderSettings(); },
+        text => { saveSetting(s => { if (!s.morningRoutine.glaubenssaetze) s.morningRoutine.glaubenssaetze = []; s.morningRoutine.glaubenssaetze.push({ id: Date.now().toString(), text, enabled: true }); }); renderSettings(); zeigToast('Glaubenssatz hinzugefügt'); }
+    );
+
+    /* Abend custom Q */
     bindCQSection('ecq',
         id => saveSetting(s => { const q = (s.eveningReflection.customQuestions||[]).find(q => String(q.id) === id); if (q) q.enabled = !q.enabled; }),
         id => { saveSetting(s => { s.eveningReflection.customQuestions = (s.eveningReflection.customQuestions||[]).filter(q => String(q.id) !== id); }); renderSettings(); },
@@ -827,14 +1061,14 @@ function renderSettings() {
 function bindCQSection(prefix, onToggle, onDelete, onAdd) {
     const content = document.getElementById('settings-content');
     content.querySelectorAll(`[data-${prefix}-toggle]`).forEach(cb => {
-        cb.onchange = e => { const id = e.target.dataset[`${prefix}Toggle`] || e.target.getAttribute(`data-${prefix}-toggle`); onToggle(id); };
+        cb.onchange = e => { const id = e.target.getAttribute(`data-${prefix}-toggle`); onToggle(id); };
     });
     content.querySelectorAll(`[data-${prefix}-del]`).forEach(btn => {
         btn.onclick = e => { const id = e.target.getAttribute(`data-${prefix}-del`); onDelete(id); };
     });
-    const addBtn = document.getElementById(`${prefix}-add-btn`);
+    const addBtn   = document.getElementById(`${prefix}-add-btn`);
     const addInput = document.getElementById(`${prefix}-input`);
-    if (addBtn) addBtn.onclick = () => { const t = addInput.value.trim(); if (t) { onAdd(t); addInput.value = ''; } };
+    if (addBtn)   addBtn.onclick = () => { const t = addInput.value.trim(); if (t) { onAdd(t); addInput.value = ''; } };
     if (addInput) addInput.onkeydown = e => { if (e.key === 'Enter' && addBtn) addBtn.click(); };
 }
 
@@ -911,9 +1145,9 @@ function exportMD() {
 /* ════════════════════════════════════════
    MENÜ & NAVIGATION
 ════════════════════════════════════════ */
-const toggleMenu    = () => document.body.classList.toggle('menu-open');
-const schliesseMenu = () => document.body.classList.remove('menu-open');
-const oeffneSettings = () => { schliesseMenu(); renderSettings(); document.getElementById('settings-overlay').classList.add('open'); };
+const toggleMenu      = () => document.body.classList.toggle('menu-open');
+const schliesseMenu   = () => document.body.classList.remove('menu-open');
+const oeffneSettings  = () => { schliesseMenu(); renderSettings(); document.getElementById('settings-overlay').classList.add('open'); };
 const schliesseSettings = () => document.getElementById('settings-overlay').classList.remove('open');
 
 /* ════════════════════════════════════════
@@ -934,11 +1168,13 @@ document.getElementById('routine-btn').addEventListener('click', oeffneSettings)
 document.getElementById('settings-back').addEventListener('click', schliesseSettings);
 document.getElementById('senden-btn').addEventListener('click', verarbeiteAntwort);
 document.getElementById('export-btn').addEventListener('click', exportMD);
-document.getElementById('antwort-input').addEventListener('keydown', e => { if (e.key === 'Enter') verarbeiteAntwort(); });
+document.getElementById('antwort-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); verarbeiteAntwort(); }
+});
 
 document.getElementById('name-input').addEventListener('input', e => {
     speichereName(e.target.value);
-    renderMainScreen(); // Echtzeit-Update der Begrüßung
+    renderMainScreen();
 });
 document.getElementById('name-input').addEventListener('blur', sendeSchedule);
 
@@ -947,7 +1183,7 @@ document.getElementById('name-input').addEventListener('blur', sendeSchedule);
 ════════════════════════════════════════ */
 document.getElementById('name-input').value = ladeName();
 
-// Migration: patch stored greeting if it has no template (old data)
+/* Migration: patch stored greeting if it has no template */
 (function migrateGreeting() {
     const h = ladeHeute();
     if (!h) return;
@@ -957,6 +1193,9 @@ document.getElementById('name-input').value = ladeName();
         speichereHeute(h);
     }
 })();
+
+/* Seed animation tracker with all existing messages so they appear instantly */
+seedAnimated();
 
 renderMainScreen();
 setInterval(() => { const h = ladeHeute(); if (h && !h.activeQuestion) renderMainScreen(); }, 60000);
